@@ -1,0 +1,106 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+
+
+// A dialogue choice represents the information suited for when the player needs
+//  to make some sort of choice.
+public class DialogueChoice {
+
+    public DialogueChoiceType type;
+    public string choiceID;
+    public string prompt;
+    public List<DialogueChoiceOption> options;
+
+
+    // Yes No constructor
+    public DialogueChoice(string choiceID, string prompt) {
+        this.type = DialogueChoiceType.yesNo;
+        this.choiceID = choiceID;
+        this.prompt = prompt;
+        this.options = new List<DialogueChoiceOption>();
+
+        this.options.Add(new DialogueChoiceOption(DialogueChoiceOption.YES));
+        this.options.Add(new DialogueChoiceOption(DialogueChoiceOption.NO));
+
+    }
+
+    // Four Square constructor
+    public DialogueChoice(string choiceID, string prompt, DialogueChoiceOption[] textOptions) {
+        this.type = DialogueChoiceType.yesNo;
+        this.choiceID = choiceID;
+        this.prompt = prompt;
+        this.options = new List<DialogueChoiceOption>(textOptions);
+    }
+
+    // Character Select constructor
+    public DialogueChoice(string choiceID, string prompt, Character[] characters) {
+        this.type = DialogueChoiceType.characterSelect;
+        this.choiceID = choiceID;
+        this.prompt = prompt;
+        // Turn each character into a dialogue choice
+        this.options = new List<DialogueChoiceOption>(characters.Select<Character, DialogueChoiceOption>(
+            character => {
+                return new DialogueChoiceOption(character.characterID);
+            }
+        ));
+    }
+
+
+    public bool isYesNo() {
+        return this.type == DialogueChoiceType.yesNo;
+    }
+
+    public bool isFour() {
+        return this.type == DialogueChoiceType.fourSquare;
+    }
+
+    public bool isCharacterSelect() {
+        return this.type == DialogueChoiceType.characterSelect;
+    }
+}
+
+// Three options for dialogue choices:
+//  - Yes or No
+//  - Choose one of four options
+//  - Select a character
+public enum DialogueChoiceType {
+    yesNo,
+    fourSquare,
+    characterSelect
+}
+
+// A dialogue choice option is a single option (text) in a choice
+public class DialogueChoiceOption {
+    public string optionID;
+    public string optionText;
+
+    public const string YES = "Yes";
+    public const string NO = "No";
+
+    public DialogueChoiceOption(string text) {
+        this.optionID = text;
+        this.optionText = text;
+    }
+
+    public DialogueChoiceOption(string optionID, string optionText) {
+        this.optionID = optionID;
+        this.optionText = optionText;
+    }
+}
+
+
+
+
+// Text created 
+public class StoryText {
+    public string textID;
+    public string[] text;
+
+    public StoryText(string textID, string[] text) {
+        this.textID = textID;
+        this.text = text;
+    }
+}
+

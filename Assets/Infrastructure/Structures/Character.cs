@@ -5,7 +5,7 @@ using UnityEngine;
 public class Character {
 
     // Names
-    public string ID;
+    public string characterID;
     public string fullName;
     public string nickName;
 
@@ -18,8 +18,8 @@ public class Character {
     // Lower = better
     public int sus;
 
-    public Character(string ID, string fullName, string nickName, string loves, string hates) {
-        this.ID = ID;
+    public Character(string characterID, string fullName, string nickName, string loves, string hates) {
+        this.characterID = characterID;
         this.fullName = fullName;
         this.nickName = nickName;
         this.loves = loves;
