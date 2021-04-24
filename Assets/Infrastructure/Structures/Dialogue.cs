@@ -26,15 +26,15 @@ public class DialogueChoice {
         this.prompt = prompt;
         this.choiceid = prompt.textID;
         this.options = new List<DialogueChoiceOption> {
-            new DialogueChoiceOption(DialogueChoiceOption.YES),
-            new DialogueChoiceOption(DialogueChoiceOption.NO)
+            new DialogueChoiceOption("yes", DialogueChoiceOption.YES),
+            new DialogueChoiceOption("no", DialogueChoiceOption.NO)
         };
     }
 
     // Two Square constructor
     public DialogueChoice(StoryText prompt, DialogueChoiceOption firstOption, DialogueChoiceOption secondOption) {
         this.type = DialogueChoiceType.twoSquare;
-        this.prompt = prompt.processText();
+        this.prompt = prompt;
         this.choiceid = prompt.textID;
         this.options = new List<DialogueChoiceOption> { firstOption, secondOption };
     }
@@ -55,7 +55,7 @@ public class DialogueChoice {
         // Turn each character into a dialogue choice
         this.options = new List<DialogueChoiceOption>(characters.Select<Character, DialogueChoiceOption>(
             character => {
-                return new DialogueChoiceOption(new StoryText("c:0", "c:0", new List<string>() { character.characterID }));
+                return new DialogueChoiceOption(character.characterID, new StoryText("c:0", "c:0", new List<string>() { character.fullName }));
             }
         ));
     }
@@ -103,9 +103,9 @@ public class DialogueChoiceOption {
     public static StoryText SCENERY = new StoryText("scenery", "s:0" );
     public static StoryText CHARACTER = new StoryText("weapon", "c:0" );
 
-    public DialogueChoiceOption(StoryText text)
+    public DialogueChoiceOption(string optionID, StoryText text)
     {
-        this.optionID = text.textID;
+        this.optionID = optionID;
         this.optionText = text;
     }
 

@@ -52,7 +52,7 @@ public class GameController : MonoBehaviour {
         yield return StartCoroutine(vc.DisplayPrompt(didYouDiscoverBody, SelectOption));
         Debug.Log("Did you discover the body: " + didYouDiscoverBody.options[recentlySelectedOption]);
         // If you did, you are the discoverer. Otherwise, a random NPC is the discoverer
-        if (didYouDiscoverBody.options[recentlySelectedOption].optionID == DialogueChoiceOption.YES) {
+        if (didYouDiscoverBody.options[recentlySelectedOption].optionID == DialogueChoiceOption.YES.textID) {
             mp.bodyDiscovererID = Character.playerID;
         } else {
             var aliveCharacters = GameState.Instance.GetAliveCharacters();
@@ -64,22 +64,20 @@ public class GameController : MonoBehaviour {
     }
 
     public IEnumerator Investigation() {
-        // Someone announces a murder occurred
-            // if you, then: you yell for everyone to come
-            // if someone else, then: they yell for everyone to come
+        // Someone announces a murder occurred (is it you? if not, who?)
 
-        // Everyone gathers around.
-        // Fear and anger fill the room.
-        // Seeds of doubt begin to sow
-        // Can you get away with it?
+        // Everyone gathers
+        // Character gets an entrance line
+        // character reacts to death
+
+
+        // we tell player to investigate
+        // Who do want to talk to?
 
         int totalInvestigations = 3;
         for (int i = 0; i < totalInvestigations; i++) {
-            // Everyone is muttering among themselves
 
-            // Who will you talk to?
-            //DialogueChoice investigateWho = new DialogueChoice(new StoryText(""))
-
+            
             yield return null;
         }
 

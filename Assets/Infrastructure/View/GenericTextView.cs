@@ -16,7 +16,7 @@ public class GenericTextView : MonoBehaviour
 
     public void AnimatePrompt(StoryText text, Action<int> callback)
     {
-        var sequence = AnimatePerWord(text);
+        var sequence = AnimatePerCharacter(text);
 
         if (button != null) {
             button.gameObject.SetActive(false);
