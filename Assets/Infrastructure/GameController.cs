@@ -11,8 +11,9 @@ public class GameController : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
 
-        // Initiate view
-        // 
+        // Initiate view?
+
+        StartCoroutine(PlayGame());
     }
 
     public IEnumerator PlayGame() {
