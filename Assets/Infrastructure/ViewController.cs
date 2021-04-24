@@ -19,21 +19,13 @@ public class ViewController : MonoBehaviour
         characterPrompt.gameObject.SetActive(false);
     }
 
-    /*
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            //StartCoroutine(DisplayStoryText());
-        }
-    }
-    */
-
     public IEnumerator DisplayStoryText(StoryText story) {
         storyText.gameObject.SetActive(true); 
 
-        for (int i = 0; i < story.text.Length; i++) {
-            storyText.UpdatePrompt(story.text[i], SetChoice);
+        //for (int i = 0; i < story.text.Length; i++) {
+            storyText.UpdatePrompt(story, SetChoice);
             yield return new WaitUntil(() => choice != -1);
-        }
+        //}
 
         storyText.gameObject.SetActive(false);
         ResetChoice();
