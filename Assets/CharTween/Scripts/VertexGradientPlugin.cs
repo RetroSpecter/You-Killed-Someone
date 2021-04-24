@@ -82,9 +82,8 @@ namespace CharTween
                 left.bottomRight * right);
         }
 
-        public override void SetFrom(TweenerCore<VertexGradient, VertexGradient, NoOptions> t, VertexGradient fromValue, bool setImmediately)
+        public override void SetFrom(TweenerCore<VertexGradient, VertexGradient, NoOptions> t, VertexGradient fromValue, bool setImmediately, bool isRelative)
         {
-            //TODO: oops
             throw new System.NotImplementedException();
         }
     } // Class
