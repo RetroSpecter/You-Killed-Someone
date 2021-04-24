@@ -8,7 +8,7 @@ using System.Linq;
 //  to make some sort of choice.
 public class DialogueChoice {
 
-    public DialogueChoiceType type;
+    private DialogueChoiceType type;
     public string choiceID;
     public string prompt;
     public List<DialogueChoiceOption> options;
@@ -59,17 +59,19 @@ public class DialogueChoice {
     public bool isCharacterSelect() {
         return this.type == DialogueChoiceType.characterSelect;
     }
+
+
+    // Three options for dialogue choices:
+    //  - Yes or No
+    //  - Choose one of four options
+    //  - Select a character
+    private enum DialogueChoiceType {
+        yesNo,
+        fourSquare,
+        characterSelect
+    }
 }
 
-// Three options for dialogue choices:
-//  - Yes or No
-//  - Choose one of four options
-//  - Select a character
-public enum DialogueChoiceType {
-    yesNo,
-    fourSquare,
-    characterSelect
-}
 
 // A dialogue choice option is a single option (text) in a choice
 public class DialogueChoiceOption {
