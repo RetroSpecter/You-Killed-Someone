@@ -104,5 +104,10 @@ public class StoryText {
         this.textID = textID;
         this.text = text;
     }
+
+
+
+
+    public static StoryText YOU_KILLED_SOMEONE = new StoryText("killed", new string[] { "You killed someone" });
 }
 
