@@ -13,6 +13,7 @@ public class GameState : MonoBehaviour {
         if (Instance == null) {
             Instance = this;
             this.characters = CharacterLibrary.LoadCharacters();
+            ProfileLibrary.AssignProfiles(this.characters.Values.ToList());
         }
     }
 
@@ -24,21 +25,16 @@ public class GameState : MonoBehaviour {
     }
 
 
-    public List<DialogueChoiceOption> GetMurderLocations() {
-        return new List<DialogueChoiceOption> {
-                new DialogueChoiceOption("", "On a box"),
-                new DialogueChoiceOption("", "with a fox"),
-                new DialogueChoiceOption("", "On a lake"),
-                new DialogueChoiceOption("", "With Josh & Drake")
-            };
+    public List<DialogueChoiceOption> GetMurderWeapons() {
+        return ProfileLibrary.GetFourProfiles().Select<Profile, DialogueChoiceOption>(
+            profile => { return new DialogueChoiceOption(profile.profileID, profile.preferredTool); }
+        ).ToList();
     }
 
-    public List<DialogueChoiceOption> GetMurderMethods() {
-        return new List<DialogueChoiceOption> {
-                new DialogueChoiceOption("", "With a Knife"),
-                new DialogueChoiceOption("", "With your looks"),
-                new DialogueChoiceOption("", "Death by very fast train"),
-                new DialogueChoiceOption("", "With Josh & Drake")
-            };
+    public List<DialogueChoiceOption> GetMurderLocations() {
+        return ProfileLibrary.GetFourProfiles().Select<Profile, DialogueChoiceOption>(
+            profile => { return new DialogueChoiceOption(profile.profileID, profile.preferredLocation); }
+        ).ToList();
     }
+
 }

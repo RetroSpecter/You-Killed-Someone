@@ -17,7 +17,7 @@ public class DialogueChoice {
     // Constant Dialogue ID's
     public const string WHO_YOU_KILLED = "who did you kill";
     public const string MURDER_LOCATION = "where did you kill";
-    public const string MURDER_METHOD = "how did you kill";
+    public const string MURDER_WEAPON = "how did you kill";
     public const string DISCOVER_BODY = "did you discover the body";
 
     // Yes No constructor
