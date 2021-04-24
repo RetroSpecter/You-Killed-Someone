@@ -32,7 +32,7 @@ public class DialogueChoice {
 
     // Four Square constructor
     public DialogueChoice(string choiceID, string prompt, List<DialogueChoiceOption> textOptions) {
-        this.type = DialogueChoiceType.yesNo;
+        this.type = DialogueChoiceType.fourSquare;
         this.choiceID = choiceID;
         this.prompt = prompt;
         this.options = textOptions;

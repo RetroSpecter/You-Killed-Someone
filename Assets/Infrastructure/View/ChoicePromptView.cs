@@ -8,18 +8,31 @@ using System;
 public class ChoicePromptView : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textMeshPro;
-    [SerializeField] private Button[] button;
+    [SerializeField] private Button[] buttons;
 
-    public void UpdatePrompt(string text, List<string> choices, Action<int> callback)
+    public void UpdatePrompt(string text, List<DialogueChoiceOption> choices, Action<int> callback)
     {
+        if (choices.Count > buttons.Length) {
+            Debug.LogError("too many choices for the container");
+        }
+
         textMeshPro.text = text;
 
-        for (int i = 0; i < button.Length; i++) {
-            button[i].GetComponentInChildren<TextMeshProUGUI>().text = choices[i];
-            button[i].onClick.AddListener(() => {
-                callback?.Invoke(i);
-                button[i].onClick.RemoveAllListeners();
-            });
+        for (int i = 0; i < buttons.Length; i++) {
+            if (i < choices.Count)
+            {
+                Button b = buttons[i];
+                b.gameObject.SetActive(true);
+                b.GetComponentInChildren<TextMeshProUGUI>().text = choices[i].optionText;
+                b.onClick.AddListener(() =>
+                {
+                    callback?.Invoke(i);
+                    b.onClick.RemoveAllListeners();
+                });
+            } else {
+                buttons[i].gameObject.SetActive(false);
+            }
+
         }
     }
 
