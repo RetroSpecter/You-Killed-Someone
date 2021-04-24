@@ -96,6 +96,10 @@ public class DialogueChoiceOption {
         this.optionID = optionID;
         this.optionText = optionText;
     }
+
+    public override string ToString() {
+        return this.optionText;
+    }
 }
 
 
