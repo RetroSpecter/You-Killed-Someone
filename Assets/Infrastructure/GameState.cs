@@ -8,6 +8,8 @@ public class GameState : MonoBehaviour {
     public static GameState Instance;
 
     public Dictionary<string, Character> characters;
+    private MurderProfile round1;
+
 
     public void Awake() {
         if (Instance == null) {
@@ -15,6 +17,11 @@ public class GameState : MonoBehaviour {
             this.characters = CharacterLibrary.LoadCharacters();
             ProfileLibrary.AssignProfiles(this.characters.Values.ToList());
         }
+    }
+
+
+    public void RegisterMurderProfile(MurderProfile mp) {
+        this.round1 = mp;
     }
 
 
@@ -38,4 +45,16 @@ public class GameState : MonoBehaviour {
         ).ToList();
     }
 
+
+    public void KillCharacter(string murderedCharacterID) {
+        var character = this.characters[murderedCharacterID];
+        character.alive = false;
+    }
+
+    public Character GetMostRecentlyKilled() {
+        return this.round1.GetMurderedCharacter();
+    }
 }
+
+
+// Create a murder profile

@@ -32,6 +32,11 @@ public class ViewController : MonoBehaviour
         ResetChoice();
     }
 
+    public IEnumerator DisplayCharacterText(CharacterText character) {
+        // TODO: Bleg, hehe
+        yield return null;
+    }
+
     public IEnumerator DisplayPrompt(DialogueChoice DialogueChoiceOption, Action<int> callback)
     {
         if (DialogueChoiceOption.isYesNo())

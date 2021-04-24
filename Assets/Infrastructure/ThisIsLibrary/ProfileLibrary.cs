@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public static class ProfileLibrary {
+
     public static Dictionary<string, Profile> AssignProfiles(List<Character> characters) {
 
         List<Profile> allProfiles = GetAllProfiles();
@@ -24,6 +26,15 @@ public static class ProfileLibrary {
     }
 
 
+    // Given a profile id, returns a weapon 
+    public static string GetWeapon(string profileID) {
+        return GetAllProfileMappings()[profileID].preferredTool;
+    }
+
+    public static string GetLocation(string profileID) {
+        return GetAllProfileMappings()[profileID].preferredLocation;
+    }
+
     // Returns a list of 4 randomly selected profiles 
     public static List<Profile> GetFourProfiles() {
         List<Profile> allProfiles = GetAllProfiles();
@@ -42,9 +53,10 @@ public static class ProfileLibrary {
     }
 
 
+    // Returns a list of all provi =
     private static List<Profile> GetAllProfiles() {
         return new List<Profile> {
-            new Profile("scb", "Space Cowboy", "laser guns", "on he moon"),
+            new Profile("scb", "Space Cowboy", "laser guns", "on the moon"),
             new Profile("chef", "5 Star Chef", "knives", "in the kitchen"),
             new Profile("phot", "Professional Photographer", "a camera", "outside"),
             new Profile("zoo", "Part Time Zoo Keeper", "trained elephants", "at the circus"),
@@ -52,5 +64,16 @@ public static class ProfileLibrary {
             new Profile("doc", "Doctor", "a stethoscope", "at a hospital"),
             new Profile("asas", "Assasin", "poison", "in a dark allyway")
         };
+    }
+
+
+    private static Dictionary<string, Profile> profileMappings;
+    private static Dictionary<string, Profile> GetAllProfileMappings() {
+        if (profileMappings == null) {
+            profileMappings = GetAllProfiles().ToDictionary(
+                profile => { return profile.profileID; }
+            );
+        }
+        return profileMappings;
     }
 }
