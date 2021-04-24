@@ -45,7 +45,6 @@ public class GameController : MonoBehaviour {
         Debug.Log("Did you discover the body: " + didYouDiscoverBody.options[recentlySelectedOption]);
 
         // Update game state
-        yield return null;
     }
 
     public IEnumerator Investigation() {
