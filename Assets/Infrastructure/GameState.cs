@@ -22,4 +22,23 @@ public class GameState : MonoBehaviour {
             character => { return character.alive; }
         ));
     }
+
+
+    public List<DialogueChoiceOption> GetMurderLocations() {
+        return new List<DialogueChoiceOption> {
+                new DialogueChoiceOption("", "On a box"),
+                new DialogueChoiceOption("", "with a fox"),
+                new DialogueChoiceOption("", "On a lake"),
+                new DialogueChoiceOption("", "With Josh & Drake")
+            };
+    }
+
+    public List<DialogueChoiceOption> GetMurderMethods() {
+        return new List<DialogueChoiceOption> {
+                new DialogueChoiceOption("", "With a Knife"),
+                new DialogueChoiceOption("", "With your looks"),
+                new DialogueChoiceOption("", "Death by very fast train"),
+                new DialogueChoiceOption("", "With Josh & Drake")
+            };
+    }
 }

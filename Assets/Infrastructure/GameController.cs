@@ -27,18 +27,18 @@ public class GameController : MonoBehaviour {
         // Give Choice: Who
         DialogueChoice whoYouKilled = new DialogueChoice(DialogueChoice.WHO_YOU_KILLED, "Who did you kill?", GameState.Instance.GetAliveCharacters());
         yield return StartCoroutine(vc.DisplayPrompt(whoYouKilled, SelectOption));
+        Debug.Log("Selected Character: " + whoYouKilled.options[recentlySelectedOption]);
 
         // Give Choice: where
-        DialogueChoice whereYouKilled = new DialogueChoice(DialogueChoice.MURDER_LOCATION, "Where did you kill them?",
-            new List<DialogueChoiceOption> {
-                new DialogueChoiceOption("", "On a box"),
-                new DialogueChoiceOption("", "with a fox"),
-                new DialogueChoiceOption("", "On a lake"),
-                new DialogueChoiceOption("", "With Josh & Drake")
-            });
+        DialogueChoice whereYouKilled = new DialogueChoice(DialogueChoice.MURDER_LOCATION, "Where did you kill them?", GameState.Instance.GetMurderLocations());
         yield return StartCoroutine(vc.DisplayPrompt(whereYouKilled, SelectOption));
+        Debug.Log("Selected location: " + whereYouKilled.options[recentlySelectedOption]);
 
         // Give Choice: how
+        DialogueChoice howYouKilled = new DialogueChoice(DialogueChoice.MURDER_METHOD, "How did you kill them?", GameState.Instance.GetMurderMethods());
+        yield return StartCoroutine(vc.DisplayPrompt(howYouKilled, SelectOption));
+        Debug.Log("Selected method of murder: " + howYouKilled.options[recentlySelectedOption]);
+
         // Give Choice: did you discover it?
 
         // Update game state
