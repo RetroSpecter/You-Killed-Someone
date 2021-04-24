@@ -10,12 +10,14 @@ public static class CharacterLibrary {
         // Create all characters and add them to a list
         List<Character> allCharacters = new List<Character>();
         allCharacters.Add(new Character("Jerry", "Jerrance Alnerbol", "Jerry", "hex"));
-        allCharacters.Add(new Character("Jerry2", "Jerrance Alnerbol2", "Jerry2", "hex"));
-        allCharacters.Add(new Character("Jerry3", "Jerrance Alnerbol3", "Jerry3", "hex"));
-        allCharacters.Add(new Character("Jerry4", "Jerrance Alnerbol4", "Jerry4", "hex"));
-        allCharacters.Add(new Character("Jerry5", "Jerrance Alnerbol5", "Jerry5", "hex"));
-        allCharacters.Add(new Character("Jerry6", "Jerrance Alnerbol6", "Jerry6", "hex"));
-        allCharacters.Add(new Character("Jerry7", "Jerrance Alnerbol7", "Jerry7", "hex"));
+        allCharacters.Add(new Character("Terry", "Terrance Boojigooba", "Terry", "hex"));
+        allCharacters.Add(new Character("Larry", "Larrance Diglehopper", "Larry", "hex"));
+        allCharacters.Add(new Character("Barry", "Barry Buhuju", "Barry", "hex"));
+        allCharacters.Add(new Character("Claire", "Clairance LongNose", "Claire", "hex"));
+        allCharacters.Add(new Character("Harry", "Harrance Pooterance", "Harry", "hex"));
+        allCharacters.Add(new Character("Merry", "Merrance LittleLamb", "Merry", "hex"));
+        allCharacters.Add(new Character("Garry", "Gerrance Modular", "Garry", "hex"));
+        allCharacters.Add(new Character("Perry", "Perrance Platypal", "Perry", "hex"));
         // More loads
 
 
