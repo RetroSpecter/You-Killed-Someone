@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,17 +19,18 @@ public class ViewController : MonoBehaviour
         characterPrompt.gameObject.SetActive(false);
     }
 
+    /*
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             //StartCoroutine(DisplayStoryText());
         }
     }
+    */
 
-    public IEnumerator DisplayStoryText(StoryText story) {
+    public IEnumerator DisplayStoryText(StoryText story, Action<int> callback) {
         storyText.gameObject.SetActive(true);
 
-        for (int i = 0; i < story.text.Length; i++)
-        {
+        for (int i = 0; i < story.text.Length; i++) {
             storyText.UpdatePrompt(story.text[i], SetChoice);
             yield return new WaitUntil(() => choice != -1);
         }
@@ -37,42 +39,45 @@ public class ViewController : MonoBehaviour
         ResetChoice();
     }
 
-    public IEnumerator DisplayPrompt(DialogueChoice DialogueChoiceOption)
+    public IEnumerator DisplayPrompt(DialogueChoice DialogueChoiceOption, Action<int> callback)
     {
+        if (DialogueChoiceOption.isYesNo())
+            yield return StartCoroutine(DisplayYesNoPrompt(DialogueChoiceOption, callback));
+        else if (DialogueChoiceOption.isFour())
+            yield return StartCoroutine(DisplayFourSquarePrompt(DialogueChoiceOption, callback));
+        else
+            yield return StartCoroutine(DisplayCharacterSelectPrompt(DialogueChoiceOption, callback));
+    }
+
+    public IEnumerator DisplayFourSquarePrompt(DialogueChoice DialogueChoiceOption, Action<int> callback) {
         genericPrompt.gameObject.SetActive(true);
         genericPrompt.UpdatePrompt("Question", new List<string> { "1", "2", "3", "4" }, SetChoice);
         yield return new WaitUntil(() => choice != -1);
 
         storyText.gameObject.SetActive(false);
+        callback?.Invoke(choice);
         ResetChoice();
     }
 
-    public IEnumerator DisplayGenericPrompt(DialogueChoice DialogueChoiceOption) {
-        genericPrompt.gameObject.SetActive(true);
-        genericPrompt.UpdatePrompt("Question", new List<string> { "1", "2", "3", "4" }, SetChoice);
-        yield return new WaitUntil(() => choice != -1);
-
-        storyText.gameObject.SetActive(false);
-        ResetChoice();
-    }
-
-    public IEnumerator DisplayYesNoPrompt(DialogueChoice DialogueChoiceOption)
+    public IEnumerator DisplayYesNoPrompt(DialogueChoice DialogueChoiceOption, Action<int> callback)
     {
         yesNoPrompt.gameObject.SetActive(true);
         yesNoPrompt.UpdatePrompt("Question", new List<string> { "Yes", "No"}, SetChoice);
         yield return new WaitUntil(() => choice != -1);
 
         storyText.gameObject.SetActive(false);
+        callback?.Invoke(choice);
         ResetChoice();
     }
 
-    public IEnumerator DisplayCharacterSelectPrompt(DialogueChoice DialogueChoiceOption)
+    public IEnumerator DisplayCharacterSelectPrompt(DialogueChoice DialogueChoiceOption, Action<int> callback)
     {
         characterPrompt.gameObject.SetActive(true);
         characterPrompt.UpdatePrompt("Question", new List<string> { "1", "2", "3", "4" }, SetChoice);
         yield return new WaitUntil(() => choice != -1);
 
         storyText.gameObject.SetActive(false);
+        callback?.Invoke(choice);
         ResetChoice();
     }
 
