@@ -11,7 +11,7 @@ public static class CharacterLibrary {
         var jerry = new Character("Jerry", "Jerrance Alnerbol", "Jerry", "Jerry", "you");
         // More loads
 
-        characters[jerry.ID] = jerry;
+        characters[jerry.characterID] = jerry;
         // more assigns
 
         return characters;
