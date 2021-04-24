@@ -28,7 +28,7 @@ public class ViewController : MonoBehaviour
     */
 
     public IEnumerator DisplayStoryText(StoryText story, Action<int> callback) {
-        storyText.gameObject.SetActive(true);
+        storyText.gameObject.SetActive(true); 
 
         for (int i = 0; i < story.text.Length; i++) {
             storyText.UpdatePrompt(story.text[i], SetChoice);
