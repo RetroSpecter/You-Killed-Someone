@@ -29,7 +29,14 @@ public class DialogueChoice {
             new DialogueChoiceOption(DialogueChoiceOption.YES),
             new DialogueChoiceOption(DialogueChoiceOption.NO)
         };
+    }
 
+    // Two Square constructor
+    public DialogueChoice(StoryText prompt, DialogueChoiceOption firstOption, DialogueChoiceOption secondOption) {
+        this.type = DialogueChoiceType.twoSquare;
+        this.prompt = prompt.processText();
+        this.choiceid = prompt.textID;
+        this.options = new List<DialogueChoiceOption> { firstOption, secondOption };
     }
 
     // Four Square constructor
@@ -58,6 +65,10 @@ public class DialogueChoice {
         return this.type == DialogueChoiceType.yesNo;
     }
 
+    public bool isTwo() {
+        return this.type == DialogueChoiceType.twoSquare;
+    }
+
     public bool isFour() {
         return this.type == DialogueChoiceType.fourSquare;
     }
@@ -73,6 +84,7 @@ public class DialogueChoice {
     //  - Select a character
     private enum DialogueChoiceType {
         yesNo,
+        twoSquare,
         fourSquare,
         characterSelect
     }
