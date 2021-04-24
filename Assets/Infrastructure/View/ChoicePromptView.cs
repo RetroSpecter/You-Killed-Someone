@@ -24,9 +24,10 @@ public class ChoicePromptView : MonoBehaviour
                 Button b = buttons[i];
                 b.gameObject.SetActive(true);
                 b.GetComponentInChildren<TextMeshProUGUI>().text = choices[i].optionText;
+                int j = i;
                 b.onClick.AddListener(() =>
                 {
-                    callback?.Invoke(i);
+                    callback?.Invoke(j);
                     b.onClick.RemoveAllListeners();
                 });
             } else {
@@ -34,6 +35,5 @@ public class ChoicePromptView : MonoBehaviour
             }
 
         }
-    }
-
+    }  
 }

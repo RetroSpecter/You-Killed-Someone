@@ -115,9 +115,32 @@ public class StoryText {
         this.text = text;
     }
 
+    public static string YOU = "YOU";
 
+    public static StoryText X_KILLED_SOMEONE = new StoryText("killed", new string[] { "{1} killed someone" });
+    public static StoryText YOU_KILLED_X_WITH_Y_AT_Z = new StoryText("killedXYZ", new string[] { "You killed %s with %s" });
+    public static StoryText X_FINDS_THE_BODY = new StoryText("findBody", new string[] { "%s finds the body" });
 
-    
-    public static StoryText YOU_KILLED_SOMEONE = new StoryText("killed", new string[] { "You killed someone" });
+    public static StoryText X_LIKES_Y = new StoryText("likes", new string[] { "%s likes %s" });
+    public static StoryText X_HATES_Y = new StoryText("hates", new string[] { "%s hates %s" });
+
+    public static StoryText WHAT_DO_YOU_WANT_TO_DO_WITH = new StoryText("ask", new string[] { "What do you want to do with %s" });
+    public static StoryText ASK_X_ABOUT_THEMSELVES = new StoryText("ask", new string[] { "Ask %s about themselves" });
+    public static StoryText TELL_X_ABOUT_SOMETHING = new StoryText("tell", new string[] { "Tell %s something" });
+    public static StoryText X_WILL_REMEMBER_THAT = new StoryText("remember", new string[] { "%s will remember that" });
+
+    public static StoryText X_AGREES = new StoryText("agrees", new string[] { "%s agrees" });
+    public static StoryText X_DISAGREES = new StoryText("disagrees", new string[] { "%s is not convinced" });
+
+    public static StoryText X_WANTS_TO_KNOW = new StoryText("questionWeapon", new string[] { "%s wants to know " });
+    public static StoryText X_WANTS_TO_KNOW_WEAPON = new StoryText("questionWeapon", new string[] { "What weapon do you like?" });
+    public static StoryText X_WANTS_TO_KNOW_PLACE = new StoryText("questionPlace", new string[] { "What place do you like?" });
+
+    public static StoryText X_SAYS_Y = new StoryText("xSaysY", new string[] { "%s says %s" });
+    public static StoryText X_IS_KILLED = new StoryText("xIsKilled", new string[] { "The group kills %s" });
+
+    public static StoryText THE_PLOT_THICKENS = new StoryText("plotThickens", new string[] { "The plot thickens" });
+    public static StoryText YOU_WIN = new StoryText("win", new string[] { "Everyone is dead. You have fullfilled your mission" });
+    public static StoryText YOU_FAIL = new StoryText("win", new string[] { "You have failed" });
 }
 
