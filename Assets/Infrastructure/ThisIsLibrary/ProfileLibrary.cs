@@ -29,7 +29,7 @@ public static class ProfileLibrary {
         List<Profile> allProfiles = GetAllProfiles();
         List<Profile> selectedProfiles = new List<Profile>();
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 4; i++) {
             int r = Random.Range(0, allProfiles.Count);
             var randomProfile = allProfiles[r];
 
@@ -49,8 +49,8 @@ public static class ProfileLibrary {
             new Profile("phot", "Professional Photographer", "a camera", "outside"),
             new Profile("zoo", "Part Time Zoo Keeper", "trained elephants", "at the circus"),
             new Profile("plantboi", "Gardener", "a rusty hoe", "the garden"),
-            new Profile("doc", "ddd", "a stethoscope", "at a hospital"),
-            new Profile("bleg7", "Bleg3", "bleg4", "bleg5")
+            new Profile("doc", "Doctor", "a stethoscope", "at a hospital"),
+            new Profile("asas", "Assasin", "poison", "in a dark allyway")
         };
     }
 }

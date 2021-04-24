@@ -4,18 +4,25 @@ using UnityEngine;
 
 public class Character {
 
-    // DISPOSITION FIELDS
+    // PERSONALITY
 
     // Names
     public string characterID;
     public string fullName;
     public string nickName;
 
-    // ID's of another character
+    // Text
+    public string hexColor;
+
+
+    // PROFILE FIELDS
+
+    // both of these are ID's of another character
     public string loves;
     public string hates;
 
     public Profile profile;
+
 
     // STATE FIELDS
 
@@ -27,21 +34,13 @@ public class Character {
 
 
 
-    public Character(string characterID, string fullName, string nickName, string loves, string hates) {
+    public Character(string characterID, string fullName, string nickName, string hexColor) {
         this.characterID = characterID;
         this.fullName = fullName;
         this.nickName = nickName;
-        this.loves = loves;
+        this.hexColor = hexColor;
 
         this.alive = true;
-
-        if (hates == "you") {
-            this.sus = 75;
-        } else if (loves == "you") {
-            this.sus = 25;
-        } else {
-            this.sus = 50;
-        }
     }
 
 
