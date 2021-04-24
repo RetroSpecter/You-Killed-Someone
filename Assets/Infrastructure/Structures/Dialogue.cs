@@ -19,10 +19,10 @@ public class DialogueChoice {
         this.type = DialogueChoiceType.yesNo;
         this.choiceID = choiceID;
         this.prompt = prompt;
-        this.options = new List<DialogueChoiceOption>();
-
-        this.options.Add(new DialogueChoiceOption(DialogueChoiceOption.YES));
-        this.options.Add(new DialogueChoiceOption(DialogueChoiceOption.NO));
+        this.options = new List<DialogueChoiceOption> {
+            new DialogueChoiceOption(DialogueChoiceOption.YES),
+            new DialogueChoiceOption(DialogueChoiceOption.NO)
+        };
 
     }
 
