@@ -2,17 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Character : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+public class Character {
+
+    // Names
+    public string ID;
+    public string fullName;
+    public string nickName;
+
+    // ID's of another character
+    public string loves;
+    public string hates;
+
+    // A value from 0 - 100 (not bound)
+    // Higher = worse
+    // Lower = better
+    public int sus;
+
+    public Character(string ID, string fullName, string nickName, string loves, string hates) {
+        this.ID = ID;
+        this.fullName = fullName;
+        this.nickName = nickName;
+        this.loves = loves;
+
+        if (hates == "you") {
+            this.sus = 75;
+        } else if (loves == "you") {
+            this.sus = 25;
+        } else {
+            this.sus = 50;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }
