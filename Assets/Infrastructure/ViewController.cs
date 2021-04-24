@@ -20,20 +20,25 @@ public class ViewController : MonoBehaviour
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            StartCoroutine(DisplayStoryText());
+            //StartCoroutine(DisplayStoryText());
         }
     }
 
-    IEnumerator DisplayStoryText() {
+    public IEnumerator DisplayStoryText(StoryText story) {
         storyText.gameObject.SetActive(true);
-        storyText.UpdatePrompt("You Killed Someone", SetChoice);
-        yield return new WaitUntil(() => choice != -1);
+
+        for (int i = 0; i < story.text.Length; i++)
+        {
+            storyText.UpdatePrompt(story.text[i], SetChoice);
+            yield return new WaitUntil(() => choice != -1);
+        }
 
         storyText.gameObject.SetActive(false);
         ResetChoice();
     }
 
-    IEnumerator DisplayGenericPrompt() {
+    public IEnumerator DisplayPrompt(DialogueChoice DialogueChoiceOption)
+    {
         genericPrompt.gameObject.SetActive(true);
         genericPrompt.UpdatePrompt("Question", new List<string> { "1", "2", "3", "4" }, SetChoice);
         yield return new WaitUntil(() => choice != -1);
@@ -42,7 +47,16 @@ public class ViewController : MonoBehaviour
         ResetChoice();
     }
 
-    IEnumerator DisplayYesNoPrompt()
+    public IEnumerator DisplayGenericPrompt(DialogueChoice DialogueChoiceOption) {
+        genericPrompt.gameObject.SetActive(true);
+        genericPrompt.UpdatePrompt("Question", new List<string> { "1", "2", "3", "4" }, SetChoice);
+        yield return new WaitUntil(() => choice != -1);
+
+        storyText.gameObject.SetActive(false);
+        ResetChoice();
+    }
+
+    public IEnumerator DisplayYesNoPrompt(DialogueChoice DialogueChoiceOption)
     {
         yesNoPrompt.gameObject.SetActive(true);
         yesNoPrompt.UpdatePrompt("Question", new List<string> { "Yes", "No"}, SetChoice);
@@ -52,7 +66,7 @@ public class ViewController : MonoBehaviour
         ResetChoice();
     }
 
-    IEnumerator DisplayCharacterSelectPrompt()
+    public IEnumerator DisplayCharacterSelectPrompt(DialogueChoice DialogueChoiceOption)
     {
         characterPrompt.gameObject.SetActive(true);
         characterPrompt.UpdatePrompt("Question", new List<string> { "1", "2", "3", "4" }, SetChoice);
