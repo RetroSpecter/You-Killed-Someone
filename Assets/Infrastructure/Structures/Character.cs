@@ -15,6 +15,8 @@ public class Character {
     public string loves;
     public string hates;
 
+    public Profile profile;
+
     // STATE FIELDS
 
     // A value from 0 - 100 (not bound)
@@ -43,4 +45,19 @@ public class Character {
     }
 
 
+}
+
+
+public class Profile {
+    public string profileID;
+    public string occupation;
+    public string preferredTool;
+    public string preferredLocation;
+
+    public Profile(string profileID, string occupation, string preferredTool, string preferredLocation) {
+        this.profileID = profileID;
+        this.occupation = occupation;
+        this.preferredTool = preferredTool;
+        this.preferredLocation = preferredLocation;
+    }
 }

@@ -37,7 +37,7 @@ public class GameController : MonoBehaviour {
         Debug.Log("Selected location: " + whereYouKilled.options[recentlySelectedOption]);
 
         // Give Choice: how
-        DialogueChoice howYouKilled = new DialogueChoice(DialogueChoice.MURDER_METHOD, "How did you kill them?", GameState.Instance.GetMurderMethods());
+        DialogueChoice howYouKilled = new DialogueChoice(DialogueChoice.MURDER_WEAPON, "How did you kill them?", GameState.Instance.GetMurderWeapons());
         yield return StartCoroutine(vc.DisplayPrompt(howYouKilled, SelectOption));
         Debug.Log("Selected method of murder: " + howYouKilled.options[recentlySelectedOption]);
 
