@@ -11,6 +11,7 @@ public class Character {
     public string fullName;
     public string nickName;
 
+    public const string playerID = "player";
     // Text
     public string hexColor;
 

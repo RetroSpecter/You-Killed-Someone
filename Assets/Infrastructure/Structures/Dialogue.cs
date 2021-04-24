@@ -112,6 +112,79 @@ public class DialogueChoiceOption {
     }
 }
 
+public class CharacterText {
+    public Character character;
+    public CharacterTextType textType;
+    public string text;
+    public List<string> characters;
+    public List<string> scenery;
+    public List<string> weapon;
+
+
+    public CharacterText(Character speaker, CharacterTextType textType) {
+        this.character = speaker;
+        this.textType = textType;
+
+        switch (textType) {
+            case CharacterTextType.bodyDiscovery:
+                // Oh no!
+                break;
+            case CharacterTextType.self:
+                // Character introduction
+                break;
+            case CharacterTextType.positivieReaction:
+                // generic "sounds reasonable"
+                break;
+            case CharacterTextType.negativeReaction:
+                // generic "hmmm...."
+                break;
+            case CharacterTextType.question:
+                // What do you like?
+                break;
+            default:
+                Debug.LogError("No Recognized Type provided");
+                break;
+        }
+    }
+
+    public enum CharacterTextType {
+        bodyDiscovery,
+        self,
+        positivieReaction,
+        negativeReaction,
+        question
+    }
+
+
+
+
+
+
+    private string processText() {
+        string ret = "";
+
+        string[] words = text.Split(' ');
+
+        for (int i = 0; i < words.Length; i++) {
+            string word = words[i];
+
+            if (word.StartsWith("c:")) {
+                int val = int.Parse(word.Split(':')[1]);
+                ret += characters[val] + " ";
+            } else if (word.StartsWith("s:")) {
+                int val = int.Parse(word.Split(':')[1]);
+                ret += characters[val] + " ";
+            } else if (word.StartsWith("w:")) {
+                int val = int.Parse(word.Split(':')[1]);
+                ret += characters[val] + " ";
+            } else {
+                ret += words[i] + " ";
+            }
+        }
+
+        return ret;
+    }
+}
 
 
 
