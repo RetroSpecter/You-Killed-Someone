@@ -40,6 +40,9 @@ public class GameController : MonoBehaviour {
         Debug.Log("Selected method of murder: " + howYouKilled.options[recentlySelectedOption]);
 
         // Give Choice: did you discover it?
+        DialogueChoice didYouDiscoverBody = new DialogueChoice(DialogueChoice.DISCOVER_BODY, "Did you \"discover\" the body?");
+        yield return StartCoroutine(vc.DisplayPrompt(didYouDiscoverBody, SelectOption));
+        Debug.Log("Did you discover the body: " + didYouDiscoverBody.options[recentlySelectedOption]);
 
         // Update game state
         yield return null;
