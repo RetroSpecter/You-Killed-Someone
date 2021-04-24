@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Character {
 
+    // DISPOSITION FIELDS
+
     // Names
     public string characterID;
     public string fullName;
@@ -13,16 +15,23 @@ public class Character {
     public string loves;
     public string hates;
 
+    // STATE FIELDS
+
     // A value from 0 - 100 (not bound)
     // Higher = worse
     // Lower = better
     public int sus;
+    public bool alive;
+
+
 
     public Character(string characterID, string fullName, string nickName, string loves, string hates) {
         this.characterID = characterID;
         this.fullName = fullName;
         this.nickName = nickName;
         this.loves = loves;
+
+        this.alive = true;
 
         if (hates == "you") {
             this.sus = 75;

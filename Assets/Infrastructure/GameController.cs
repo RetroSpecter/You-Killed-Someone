@@ -5,7 +5,8 @@ using UnityEngine;
 public class GameController : MonoBehaviour {
 
 
-    int recentlySelectedOption;
+    public ViewController vc;
+    private int recentlySelectedOption;
 
     // Start is called before the first frame update
     void Start() {
@@ -20,10 +21,22 @@ public class GameController : MonoBehaviour {
     }
 
     public IEnumerator Murder() {
-        // You killed someone
+        yield return StartCoroutine(vc.DisplayStoryText(StoryText.YOU_KILLED_SOMEONE, SelectOption));
 
         // Give Choice: Who
+        DialogueChoice whoYouKilled = new DialogueChoice(DialogueChoice.WHO_YOU_KILLED, "Who did you kill?", GameState.Instance.GetAliveCharacters());
+        yield return StartCoroutine(vc.DisplayPrompt(whoYouKilled, SelectOption));
+
         // Give Choice: where
+        DialogueChoice whereYouKilled = new DialogueChoice(DialogueChoice.MURDER_LOCATION, "Where did you kill them?",
+            new List<DialogueChoiceOption> {
+                new DialogueChoiceOption("", "On a box"),
+                new DialogueChoiceOption("", "with a fox"),
+                new DialogueChoiceOption("", "On a lake"),
+                new DialogueChoiceOption("", "With Josh & Drake")
+            });
+        yield return StartCoroutine(vc.DisplayPrompt(whereYouKilled, SelectOption));
+
         // Give Choice: how
         // Give Choice: did you discover it?
 

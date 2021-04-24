@@ -14,6 +14,10 @@ public class DialogueChoice {
     public List<DialogueChoiceOption> options;
 
 
+    // Constant Dialogue ID's
+    public const string WHO_YOU_KILLED = "who did you kill";
+    public const string MURDER_LOCATION = "where did you kill";
+
     // Yes No constructor
     public DialogueChoice(string choiceID, string prompt) {
         this.type = DialogueChoiceType.yesNo;
@@ -27,15 +31,15 @@ public class DialogueChoice {
     }
 
     // Four Square constructor
-    public DialogueChoice(string choiceID, string prompt, DialogueChoiceOption[] textOptions) {
+    public DialogueChoice(string choiceID, string prompt, List<DialogueChoiceOption> textOptions) {
         this.type = DialogueChoiceType.yesNo;
         this.choiceID = choiceID;
         this.prompt = prompt;
-        this.options = new List<DialogueChoiceOption>(textOptions);
+        this.options = textOptions;
     }
 
     // Character Select constructor
-    public DialogueChoice(string choiceID, string prompt, Character[] characters) {
+    public DialogueChoice(string choiceID, string prompt, List<Character> characters) {
         this.type = DialogueChoiceType.characterSelect;
         this.choiceID = choiceID;
         this.prompt = prompt;
@@ -107,7 +111,7 @@ public class StoryText {
 
 
 
-
+    
     public static StoryText YOU_KILLED_SOMEONE = new StoryText("killed", new string[] { "You killed someone" });
 }
 

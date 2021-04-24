@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GameState : MonoBehaviour {
 
@@ -13,5 +14,12 @@ public class GameState : MonoBehaviour {
             Instance = this;
             this.characters = CharacterLibrary.LoadCharacters();
         }
+    }
+
+
+    public List<Character> GetAliveCharacters() {
+        return new List<Character>(this.characters.Values.Where<Character>(
+            character => { return character.alive; }
+        ));
     }
 }
