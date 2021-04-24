@@ -6,7 +6,7 @@ using UnityEngine;
 public class ViewController : MonoBehaviour
 {
     public GenericTextView storyText;
-    public ChoicePromptView genericPrompt, yesNoPrompt, characterPrompt;
+    public ChoicePromptView genericView, yesNoView, characterView, askCharacterView;
 
     int choice = -1;
 
@@ -14,16 +14,17 @@ public class ViewController : MonoBehaviour
     {
         ResetChoice();
         storyText.gameObject.SetActive(false);
-        genericPrompt.gameObject.SetActive(false);
-        yesNoPrompt.gameObject.SetActive(false);
-        characterPrompt.gameObject.SetActive(false);
+        genericView.gameObject.SetActive(false);
+        yesNoView.gameObject.SetActive(false);
+        characterView.gameObject.SetActive(false);
+        askCharacterView.gameObject.SetActive(false);
     }
 
     public IEnumerator DisplayStoryText(StoryText story) {
         storyText.gameObject.SetActive(true); 
 
         //for (int i = 0; i < story.text.Length; i++) {
-            storyText.UpdatePrompt(story, SetChoice);
+            storyText.AnimatePrompt(story, SetChoice);
             yield return new WaitUntil(() => choice != -1);
         //}
 
@@ -42,33 +43,33 @@ public class ViewController : MonoBehaviour
     }
 
     public IEnumerator DisplayFourSquarePrompt(DialogueChoice DialogueChoiceOption, Action<int> callback) {
-        genericPrompt.gameObject.SetActive(true);
-        genericPrompt.UpdatePrompt(DialogueChoiceOption.prompt, DialogueChoiceOption.options, SetChoice);
+        genericView.gameObject.SetActive(true);
+        genericView.UpdatePrompt(DialogueChoiceOption.prompt, DialogueChoiceOption.options, SetChoice);
         yield return new WaitUntil(() => choice != -1);
 
-        genericPrompt.gameObject.SetActive(false);
+        genericView.gameObject.SetActive(false);
         callback?.Invoke(choice);
         ResetChoice();
     }
 
     public IEnumerator DisplayYesNoPrompt(DialogueChoice DialogueChoiceOption, Action<int> callback)
     {
-        yesNoPrompt.gameObject.SetActive(true);
-        yesNoPrompt.UpdatePrompt(DialogueChoiceOption.prompt, DialogueChoiceOption.options, SetChoice);
+        yesNoView.gameObject.SetActive(true);
+        yesNoView.UpdatePrompt(DialogueChoiceOption.prompt, DialogueChoiceOption.options, SetChoice);
         yield return new WaitUntil(() => choice != -1);
 
-        yesNoPrompt.gameObject.SetActive(false);
+        yesNoView.gameObject.SetActive(false);
         callback?.Invoke(choice);
         ResetChoice();
     }
 
     public IEnumerator DisplayCharacterSelectPrompt(DialogueChoice DialogueChoiceOption, Action<int> callback)
     {
-        characterPrompt.gameObject.SetActive(true);
-        characterPrompt.UpdatePrompt(DialogueChoiceOption.prompt, DialogueChoiceOption.options, SetChoice);
+        characterView.gameObject.SetActive(true);
+        characterView.UpdatePrompt(DialogueChoiceOption.prompt, DialogueChoiceOption.options, SetChoice);
         yield return new WaitUntil(() => choice != -1);
 
-        characterPrompt.gameObject.SetActive(false);
+        characterView.gameObject.SetActive(false);
         callback?.Invoke(choice);
         ResetChoice();
     }

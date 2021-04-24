@@ -4,36 +4,44 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using DG.Tweening;
 
 public class ChoicePromptView : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI textMeshPro;
-    [SerializeField] private Button[] buttons;
+    [SerializeField] private GenericTextView gtv;
+    [SerializeField] private GenericTextView[] buttons;
 
-    public void UpdatePrompt(string text, List<DialogueChoiceOption> choices, Action<int> callback)
+    public void UpdatePrompt(StoryText text, List<DialogueChoiceOption> choices, Action<int> callback)
     {
         if (choices.Count > buttons.Length) {
             Debug.LogError("too many choices for the container");
         }
 
-        textMeshPro.text = text;
+        gtv.UpdatePrompt(text, null);
 
         for (int i = 0; i < buttons.Length; i++) {
             if (i < choices.Count)
             {
-                Button b = buttons[i];
+                GenericTextView b = buttons[i];
                 b.gameObject.SetActive(true);
-                b.GetComponentInChildren<TextMeshProUGUI>().text = choices[i].optionText;
+
                 int j = i;
-                b.onClick.AddListener(() =>
-                {
-                    callback?.Invoke(j);
-                    b.onClick.RemoveAllListeners();
-                });
+                b.UpdatePrompt(choices[i].optionText, _ => buttonSelected(j, callback));
             } else {
                 buttons[i].gameObject.SetActive(false);
             }
-
         }
-    }  
+    }
+
+    private void buttonSelected(int index, Action<int> callback) {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if(i != index)
+                buttons[i].CancelButton();
+        }
+
+        DOTween.Sequence()
+            .AppendInterval(UnityEngine.Random.Range(1, 2))
+            .AppendCallback(() => callback(index));
+    }
 }

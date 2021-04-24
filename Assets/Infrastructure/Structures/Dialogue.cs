@@ -9,21 +9,21 @@ using System.Linq;
 public class DialogueChoice {
 
     private DialogueChoiceType type;
-    public string prompt;
+    public StoryText prompt;
     public string choiceid;
     public List<DialogueChoiceOption> options;
 
 
     // Constant Dialogue ID's
-    public static StoryText WHO_YOU_KILLED = new StoryText("whoYouKilled", "who did " +  StoryText.YOU + " kill" );
-    public static StoryText MURDER_LOCATION = new StoryText("whereYouKilled", "where did " + StoryText.YOU + " kill" );
-    public static StoryText MURDER_WEAPON = new StoryText("howYouKilled", "how did " + StoryText.YOU + " kill" );
-    public static StoryText DISCOVER_BODY = new StoryText("youDiscoveredBody", "did " + StoryText.YOU + " \"discover\" the body" );
+    public static StoryText WHO_YOU_KILLED = new StoryText("whoYouKilled", "who did c:0 kill", new List<string> { StoryText.YOU });
+    public static StoryText MURDER_LOCATION = new StoryText("whereYouKilled", "where did c:0 kill", new List<string> { StoryText.YOU });
+    public static StoryText MURDER_WEAPON = new StoryText("howYouKilled", "how did c:0 kill", new List<string> { StoryText.YOU });
+    public static StoryText DISCOVER_BODY = new StoryText("youDiscoveredBody", "did c:0 \"discover\" the body", new List<string> { StoryText.YOU });
 
     // Yes No constructor
     public DialogueChoice(StoryText prompt) {
         this.type = DialogueChoiceType.yesNo;
-        this.prompt = prompt.processText();
+        this.prompt = prompt;
         this.choiceid = prompt.textID;
         this.options = new List<DialogueChoiceOption> {
             new DialogueChoiceOption(DialogueChoiceOption.YES),
@@ -35,7 +35,7 @@ public class DialogueChoice {
     // Four Square constructor
     public DialogueChoice(StoryText prompt, List<DialogueChoiceOption> textOptions) {
         this.type = DialogueChoiceType.fourSquare;
-        this.prompt = prompt.processText();
+        this.prompt = prompt;
         this.choiceid = prompt.textID;
         this.options = textOptions;
     }
@@ -43,12 +43,12 @@ public class DialogueChoice {
     // Character Select constructor
     public DialogueChoice(StoryText prompt, List<Character> characters) {
         this.type = DialogueChoiceType.characterSelect;
-        this.prompt = prompt.processText();
+        this.prompt = prompt;
         this.choiceid = prompt.textID;
         // Turn each character into a dialogue choice
         this.options = new List<DialogueChoiceOption>(characters.Select<Character, DialogueChoiceOption>(
             character => {
-                return new DialogueChoiceOption("<color=yellow>" + character.characterID + "</color>");
+                return new DialogueChoiceOption(new StoryText("c:0", "c:0", new List<string>() { character.characterID }));
             }
         ));
     }
@@ -82,10 +82,10 @@ public class DialogueChoice {
 // A dialogue choice option is a single option (text) in a choice
 public class DialogueChoiceOption {
     public string optionID;
-    public string optionText;
+    public StoryText optionText;
 
-    public const string YES = "Yes";
-    public const string NO = "No";
+    public static StoryText YES = new StoryText("yes", "yes");
+    public static StoryText NO = new StoryText("no", "no");
 
     public static StoryText WEAPON = new StoryText("weapon", "w:0" );
     public static StoryText SCENERY = new StoryText("scenery", "s:0" );
@@ -94,21 +94,11 @@ public class DialogueChoiceOption {
     public DialogueChoiceOption(StoryText text)
     {
         this.optionID = text.textID;
-        this.optionText = text.processText();
-    }
-
-    public DialogueChoiceOption(string text) {
-        this.optionID = text;
         this.optionText = text;
     }
 
-    public DialogueChoiceOption(string optionID, string optionText) {
-        this.optionID = optionID;
-        this.optionText = optionText;
-    }
-
     public override string ToString() {
-        return this.optionText;
+        return this.optionText.ProcessText();
     }
 }
 
@@ -121,7 +111,7 @@ public class StoryText {
     public string text;
     public List<string> characters;
     public List<string> scenery;
-    public List<string> weapon;
+    public List<string> weapons;
 
     public StoryText(StoryText storyText, List<string> characters = null, List<string> scenery = null, List<string> weapon = null) {
         this.textID = storyText.textID;
@@ -129,7 +119,7 @@ public class StoryText {
 
         this.characters = characters;
         this.scenery = scenery;
-        this.weapon = weapon;
+        this.weapons = weapon;
     }
 
     public StoryText(string textID, string text, List<string> characters = null, List<string> scenery = null, List<string> weapon = null) {
@@ -138,10 +128,10 @@ public class StoryText {
 
         this.characters = characters;
         this.scenery = scenery;
-        this.weapon = weapon;
+        this.weapons = weapon;
     }
 
-    public string processText() {
+    public string ProcessText() {
         string ret = "";
 
         string[] words = text.Split(' ');
@@ -154,13 +144,46 @@ public class StoryText {
                 ret += characters[val] + " ";
             } else if (word.StartsWith("s:")) {
                 int val = int.Parse(word.Split(':')[1]);
-                ret += characters[val] + " ";
+                ret += scenery[val] + " ";
             } else if (word.StartsWith("w:")) {
                 int val = int.Parse(word.Split(':')[1]);
-                ret += characters[val] + " ";
+                ret += weapons[val] + " ";
             } else {
                 ret += words[i] + " ";
             }
+        }
+
+        return ret;
+    }
+
+    public List<Color> MapColor() {
+        List<Color> ret = new List<Color>();
+        string[] words = text.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            string word = words[i];
+
+            if (word.StartsWith("c:")) {
+                int val = int.Parse(word.Split(':')[1]);
+                foreach (char c in characters[val])
+                    ret.Add(Color.red);
+            } else if (word.StartsWith("s:")) {
+                int val = int.Parse(word.Split(':')[1]);
+
+                foreach(char c in scenery[val])
+                    ret.Add(Color.green);
+            } else if (word.StartsWith("w:")) {
+                int val = int.Parse(word.Split(':')[1]);
+
+                foreach(char c in weapons[val])
+                    ret.Add(Color.yellow);
+            } else {
+                foreach(char c in word)
+                    ret.Add(Color.white);
+            }
+
+            ret.Add(Color.white); // space
         }
 
         return ret;

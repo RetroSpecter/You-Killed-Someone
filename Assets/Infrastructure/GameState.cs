@@ -27,13 +27,14 @@ public class GameState : MonoBehaviour {
 
     public List<DialogueChoiceOption> GetMurderWeapons() {
         return ProfileLibrary.GetFourProfiles().Select<Profile, DialogueChoiceOption>(
-            profile => { return new DialogueChoiceOption(profile.profileID, profile.preferredTool); }
+            profile => {  return new DialogueChoiceOption(new StoryText(profile.profileID, "w:0", null, null, new List<string>() { profile.preferredTool })); }
         ).ToList();
     }
 
     public List<DialogueChoiceOption> GetMurderLocations() {
         return ProfileLibrary.GetFourProfiles().Select<Profile, DialogueChoiceOption>(
-            profile => { return new DialogueChoiceOption(profile.profileID, profile.preferredLocation); }
+            //profile => { return new DialogueChoiceOption(profile.profileID, profile.preferredLocation); }
+            profile => { return new DialogueChoiceOption(new StoryText(profile.profileID, "s:0", null, new List<string>() { profile.preferredLocation }, null)); }
         ).ToList();
     }
 
