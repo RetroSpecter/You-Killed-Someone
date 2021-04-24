@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour {
     }
 
     public IEnumerator Murder() {
-        yield return StartCoroutine(vc.DisplayStoryText(StoryText.YOU_KILLED_SOMEONE, SelectOption));
+        yield return StartCoroutine(vc.DisplayStoryText(StoryText.YOU_KILLED_SOMEONE));
 
         // Give Choice: Who
         DialogueChoice whoYouKilled = new DialogueChoice(DialogueChoice.WHO_YOU_KILLED, "Who did you kill?", GameState.Instance.GetAliveCharacters());
