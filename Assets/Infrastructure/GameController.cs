@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour {
     }
 
     public IEnumerator Murder() {
-        // You murdered someoe
+        // You killed someone
 
         // Give Choice: Who
         // Give Choice: where
@@ -45,6 +45,7 @@ public class GameController : MonoBehaviour {
         int totalInvestigations = 3;
         for (int i = 0; i < totalInvestigations; i++) {
 
+            
             yield return null;
         }
 
