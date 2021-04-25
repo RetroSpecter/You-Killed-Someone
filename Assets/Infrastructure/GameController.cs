@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour {
     public IEnumerator PlayGame() {
         yield return StartCoroutine(Murder());
         yield return StartCoroutine(Investigation());
+        yield return StartCoroutine(Trial());
 
     }
 
@@ -183,7 +184,7 @@ public class GameController : MonoBehaviour {
                 if (correct) {
                     yield return StartCoroutine(AdjustSusSlightly(investigatee, false));
                 } else {
-                    yield return StartCoroutine(AdjustSusModerately(investigatee, false));
+                    yield return StartCoroutine(AdjustSusModerately(investigatee, true));
                 }
             }
 
@@ -202,6 +203,7 @@ public class GameController : MonoBehaviour {
             // Randomly produce four options
             var profiles = ProfileLibrary.GetFourProfiles();
 
+            bool moderate = false, greatly = false;
             // Which do you like? / Which are you?
             switch (questionType) {
                 // Asking about preferred tools
@@ -232,17 +234,29 @@ public class GameController : MonoBehaviour {
                     yield return StartCoroutine(vc.DisplayPrompt(weaponsQuestion, SelectOption));
                     string selectedWeaponID = weaponsQuestion.GetOptionID(recentlySelectedOption);
 
+
                     // If selected weapon is murder weapon, increase sus moderately
                     if (selectedWeaponID == mp.weaponProfileID) {
-                        investigatee.AdjustSusModerately(true);
-                        Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
+                        //investigatee.AdjustSusModerately(true);
+                        moderate = true;
                     }
 
                     // if selected weapon contradicts what they know, increase sus greatly
                     if (!investigatee.MatchesBelievedPlayerTool(selectedWeaponID)) {
-                        investigatee.AdjustSusGreatly(true);
-                        Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                        //investigatee.AdjustSusGreatly(true);
+                        greatly = true;
                     }
+
+                    // If the investigatee's suspiciion rose
+                    if (moderate && !greatly) {
+                        yield return StartCoroutine(AdjustSusModerately(investigatee, true));
+                    } else if (greatly) {
+                        if (moderate) {
+                            investigatee.AdjustSusModerately(true);
+                        }
+                        yield return StartCoroutine(AdjustSusGreatly(investigatee, true));
+                    }
+
 
                     // Assign the the weapon
                     investigatee.believedPlayerToolID = selectedWeaponID;
@@ -278,14 +292,26 @@ public class GameController : MonoBehaviour {
 
                     // If selected location is murder location, increase sus moderately
                     if (selectedLocationID == mp.locationProfileID) {
-                        investigatee.AdjustSusModerately(true);
-                        Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
+                        moderate = true;
+                        //investigatee.AdjustSusModerately(true);
+                        //Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
                     }
 
                     // if selected location contradicts what they know, increase sus greatly
                     if (!investigatee.MatchesBelievedPlayerLocation(selectedLocationID)) {
-                        investigatee.AdjustSusGreatly(true);
-                        Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                        greatly = true;
+                        //investigatee.AdjustSusGreatly(true);
+                        //Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                    }
+
+                    // If the investigatee's suspiciion rose
+                    if (moderate && !greatly) {
+                        yield return StartCoroutine(AdjustSusModerately(investigatee, true));
+                    } else if (greatly) {
+                        if (moderate) {
+                            investigatee.AdjustSusModerately(true);
+                        }
+                        yield return StartCoroutine(AdjustSusGreatly(investigatee, true));
                     }
 
                     // Assign the the location
@@ -309,20 +335,38 @@ public class GameController : MonoBehaviour {
                     yield return StartCoroutine(vc.DisplayPrompt(occupationsQuestion, SelectOption));
                     string selectedOccupationID = occupationsQuestion.GetOptionID(recentlySelectedOption);
 
+                    bool slightly1 = false, slightly2 = false;
                     // If the murder location and/or weapon belongs to the occupation, increase sus slightly
                     if (selectedOccupationID == mp.weaponProfileID) {
-                        investigatee.AdjustSusSlightly(true);
-                        Debug.Log(investigatee.nickName + "'s sus of the player has slightly raised to " + investigatee.sus);
+                        slightly1 = true;
+                        //investigatee.AdjustSusSlightly(true);
+                        //Debug.Log(investigatee.nickName + "'s sus of the player has slightly raised to " + investigatee.sus);
                     }
                     if (selectedOccupationID == mp.locationProfileID) {
-                        investigatee.AdjustSusSlightly(true);
-                        Debug.Log(investigatee.nickName + "'s sus of the player has slightly raised to " + investigatee.sus);
+                        slightly2 = true;
+                        //investigatee.AdjustSusSlightly(true);
+                        //Debug.Log(investigatee.nickName + "'s sus of the player has slightly raised to " + investigatee.sus);
                     }
 
                     // if selected location contradicts what they know, increase sus greatly
                     if (!investigatee.MatchesBelievedPlayerOccupation(selectedOccupationID)) {
-                        investigatee.AdjustSusGreatly(true);
-                        Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                        greatly = true;
+                        //investigatee.AdjustSusGreatly(true);
+                        //Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                    }
+
+                    // If the investigatee's suspiciion rose
+                    if (slightly1 ^ slightly2 && !greatly) {
+                        yield return StartCoroutine(AdjustSusSlightly(investigatee, true));
+                    } else if (slightly1 && slightly2 && !greatly) {
+                        yield return StartCoroutine(AdjustSusModerately(investigatee, true));
+                    } else if (greatly) {
+                        if (slightly1 ^ slightly2) {
+                            investigatee.AdjustSusSlightly(true);
+                        } else if (slightly1 && slightly2) {
+                            investigatee.AdjustSusModerately(true);
+                        }
+                        yield return StartCoroutine(AdjustSusGreatly(investigatee, true));
                     }
 
                     // Assign the the occupation
@@ -340,15 +384,27 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator Trial() {
         // Tensions rise even higher as you fall deeper and deeper into your lies
-
-        // Out of the blue, x addresses you in front of the group!
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+            "Tensions are rising as you fall deeper and deeper into your lies", new List<Character> { CharacterLibrary.PLAYER })));
 
 
         // get x character who is sus of the character
         // get a profile item Y that you told someone you like / are
+        Character blamer;
+        List<Character> allChars = GameState.Instance.GetAliveCharacters();
+        //yield return StartCoroutine(AdjustSusGreatly(allChars[2], true));
+        //yield return StartCoroutine(AdjustSusSlightly(allChars[4], false));
+        allChars.Sort( (x, y) => { return y.sus - x.sus; });
+        //foreach(var c in allChars) {
+        //    Debug.Log(c.nickName + ": " + c.sus);
+        //}
+
+
+        // Out of the blue, x addresses you in front of the group!
+
         // They ask "don't you like y?" 
-            // Yes => everyone thinks you like this item
-            // No => contradicts anyone who thought you did, greatly increases sus
+        // Yes => everyone thinks you like this item
+        // No => contradicts anyone who thought you did, greatly increases sus
 
         // Who will you pin the blame on?
         // Select a character
@@ -362,17 +418,17 @@ public class GameController : MonoBehaviour {
         // Calculation
 
         // If people confirm:
-            // The group believes you.
-            // <blank> goodbye
-            // Onto next round
+        // The group believes you.
+        // <blank> goodbye
+        // Onto next round
         // Else:
-            // The group does not believe you. They think you did it.
-            // This is the end.
-            // <you> goodbye
-            // Game over. Restart?
-                // Yes -> restart
-                // No -> quit
-         
+        // The group does not believe you. They think you did it.
+        // This is the end.
+        // <you> goodbye
+        // Game over. Restart?
+        // Yes -> restart
+        // No -> quit
+
 
         yield return null;
     }
@@ -382,9 +438,9 @@ public class GameController : MonoBehaviour {
         c.AdjustSusSlightly(increase);
 
         if (increase)
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_AGREES, new List<Character> { c })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 seems a bit suspicious of c:1", new List<Character> { c, CharacterLibrary.PLAYER })));
         else
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_DISAGREES, new List<Character> { c })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 seems a little less warry of you", new List<Character> { c })));
     }
 
     public IEnumerator AdjustSusModerately(Character c, bool increase)
@@ -392,9 +448,9 @@ public class GameController : MonoBehaviour {
         c.AdjustSusModerately(increase);
 
         if(increase)
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 nods reassuredly", new List<Character> { c })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is clearly uneasy", new List<Character> { c })));
         else
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 seems a bit suspicious", new List<Character> { c })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 feel c:1 relax after hearing that", new List<Character> { CharacterLibrary.PLAYER, c })));
 
 
     }
@@ -403,9 +459,9 @@ public class GameController : MonoBehaviour {
     {
         c.AdjustSusGreatly(increase);
         if (increase)
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you completely", new List<Character> { c })));
-        else
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 doesn't believe a single word you said.", new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you completely", new List<Character> { c })));
 
     }
 
