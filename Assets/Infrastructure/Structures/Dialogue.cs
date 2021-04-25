@@ -20,7 +20,7 @@ public class DialogueChoice {
     public static StoryText MURDER_WEAPON = new StoryText("howYouKilled", "how did c:0 kill", new List<Character> { CharacterLibrary.PLAYER });
     public static StoryText DISCOVER_BODY = new StoryText("youDiscoveredBody", "did c:0 \"discover\" the body", new List<Character> { CharacterLibrary.PLAYER });
 
-    public static StoryText WHO_TO_TALK_TO = new StoryText("talkToWhom", "Who will c:0 talk to?", new List<string> { StoryText.YOU });
+    public static StoryText WHO_TO_TALK_TO = new StoryText("talkToWhom", "Who will c:0 talk to?", new List<Character> { CharacterLibrary.PLAYER });
 
     // Yes No constructor
     public DialogueChoice(StoryText prompt) {
@@ -63,7 +63,7 @@ public class DialogueChoice {
     }
 
     public static DialogueChoice CreateAskOrTellChoice(Character beingTalkedto) {
-        StoryText talkOrTell = new StoryText("AskOrTell", "Will c:0 ask or tell c:1?", new List<string> { StoryText.YOU , beingTalkedto.fullName});
+        StoryText talkOrTell = new StoryText("AskOrTell", "Will c:0 ask or tell c:1?", new List<Character> { CharacterLibrary.PLAYER , beingTalkedto });
         return new DialogueChoice(talkOrTell, DialogueChoiceOption.ASK, DialogueChoiceOption.TELL);
     }
 
