@@ -32,21 +32,31 @@ public class GameController : MonoBehaviour {
         // Give Choice: Who
         DialogueChoice whoYouKilled = new DialogueChoice(DialogueChoice.WHO_YOU_KILLED, GameState.Instance.GetAliveCharacters());
         yield return StartCoroutine(vc.DisplayPrompt(whoYouKilled, SelectOption));
-        //Debug.Log("Selected Character: " + whoYouKilled.options[recentlySelectedOption]);
+        yield return null;
+
+        Debug.Log("Selected Character: " + whoYouKilled.options[recentlySelectedOption]);
         GameState.Instance.KillCharacter(whoYouKilled.GetOptionID(recentlySelectedOption));
         mp.murderedCharacterID = whoYouKilled.GetOptionID(recentlySelectedOption);
 
         // Give Choice: where
         DialogueChoice whereYouKilled = new DialogueChoice(DialogueChoice.MURDER_LOCATION, GameState.Instance.GetMurderLocations(true));
         yield return StartCoroutine(vc.DisplayPrompt(whereYouKilled, SelectOption));
-        //Debug.Log("Selected location: " + whereYouKilled.options[recentlySelectedOption]);
-        mp.weaponProfileID = whereYouKilled.GetOptionID(recentlySelectedOption);
+        yield return null;
+
+        Debug.Log("Selected location: " + whereYouKilled.options[recentlySelectedOption]);
+        mp.locationProfileID = whereYouKilled.GetOptionID(recentlySelectedOption);
 
         // Give Choice: how
         DialogueChoice howYouKilled = new DialogueChoice(DialogueChoice.MURDER_WEAPON, GameState.Instance.GetMurderWeapons(true));
         yield return StartCoroutine(vc.DisplayPrompt(howYouKilled, SelectOption));
-        //Debug.Log("Selected method of murder: " + howYouKilled.options[recentlySelectedOption]);
-        mp.locationProfileID = howYouKilled.GetOptionID(recentlySelectedOption);
+        yield return null;
+
+        Debug.Log("Selected method of murder: " + howYouKilled.options[recentlySelectedOption]);
+        Debug.Log("Selected option ID: " + howYouKilled.options[recentlySelectedOption].optionID);
+        mp.weaponProfileID = howYouKilled.GetOptionID(recentlySelectedOption);
+
+        // You murdered _ with _
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_X_WITH_Y_AT_Z, new List<Character>() { CharacterLibrary.PLAYER, mp.GetMurderedCharacter() }, new List<string>() { mp.GetMurderLocation() }, new List<string>() { mp.GetMurderWeapon() })));
 
         // Give Choice: did you discover it?
         DialogueChoice didYouDiscoverBody = new DialogueChoice(DialogueChoice.DISCOVER_BODY);
@@ -54,11 +64,12 @@ public class GameController : MonoBehaviour {
         //Debug.Log("Did you discover the body: " + didYouDiscoverBody.options[recentlySelectedOption]);
         // If you did, you are the discoverer. Otherwise, a random NPC is the discoverer
         if (didYouDiscoverBody.GetOptionID(recentlySelectedOption) == DialogueChoiceOption.YES.textID) {
-            mp.bodyDiscovererID = Character.playerID;
+            mp.bodyDiscovererID = CharacterLibrary.PLAYER.characterID;
         } else {
             var aliveCharacters = GameState.Instance.GetAliveCharacters();
             mp.bodyDiscovererID = aliveCharacters[Random.Range(0, aliveCharacters.Count)].characterID;
         }
+
 
         // Update game state
         GameState.Instance.RegisterMurderProfile(mp);
@@ -66,22 +77,17 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator Investigation() {
         var mp = GameState.Instance.GetMostRecentMurderProfile();
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_FINDS_THE_BODY, new List<Character>() { mp.GetBodyDiscoverer() })));
 
-        // Someone announces a murder occurred
-        // if you, then: you yell for everyone to come
-        // if someone else, then: they yell for everyone to come
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone gathers s:0", null, new List<string> { mp.GetMurderLocation() })));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "tension fills the atmopshere")));
 
-        // Everyone gathers around.
-
-        // Fear and anger fill the room.
-
-        // Seeds of doubt begin to sow
-
-        // Can you get away with it?
+        yield return StartCoroutine(vc.DisplayStoryText(StoryText.THE_PLOT_THICKENS));
 
         int totalInvestigations = 3;
         for (int i = 0; i < totalInvestigations; i++) {
             // Everyone is muttering among themselves
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is cautiously eyeing each other")));
 
             // Who will you talk to?
             DialogueChoice talkToSomeone = new DialogueChoice(DialogueChoice.WHO_TO_TALK_TO, GameState.Instance.GetAliveCharacters());
@@ -96,8 +102,17 @@ public class GameController : MonoBehaviour {
 
             if (asking) {
                 // character talks about themselves
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They introduce themselves as c:0", new List<Character> { })));
 
-            } else {
+
+                // gives their name
+                // their occupation
+                // their favorite object
+                // who they like
+                // who they dislike
+
+            }
+            else {
 
                 // Randomly select between:
                 //  - Talking about murder weapon

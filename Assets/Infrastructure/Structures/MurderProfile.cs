@@ -40,8 +40,8 @@ public class MurderProfile {
             Debug.LogError("This Murder Profile's body Discoverer has not been assigned");
         }
 
-        if (bodyDiscovererID == Character.playerID) {
-            return null;
+        if (bodyDiscovererID == CharacterLibrary.PLAYER.characterID) {
+            return CharacterLibrary.PLAYER;
         }
         return GameState.Instance.characters[bodyDiscovererID];
     }

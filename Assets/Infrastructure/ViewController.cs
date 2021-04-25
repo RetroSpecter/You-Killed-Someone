@@ -41,6 +41,9 @@ public class ViewController : MonoBehaviour
             yield return StartCoroutine(DisplayYesNoPrompt(DialogueChoiceOption, callback));
         else if (DialogueChoiceOption.isFour())
             yield return StartCoroutine(DisplayFourSquarePrompt(DialogueChoiceOption, callback));
+        else if(DialogueChoiceOption.isTwo())
+            yield return StartCoroutine(DisplayAskCharacterPrompt(DialogueChoiceOption, callback));
+
         else
             yield return StartCoroutine(DisplayCharacterSelectPrompt(DialogueChoiceOption, callback));
     }
