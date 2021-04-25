@@ -110,10 +110,11 @@ public class GameController : MonoBehaviour {
                 // character talks about themselves
                 yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They introduce themselves as c:0", new List<Character> { investigatee })));
                 yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They are a s:0", null, new List<string> { investigatee.profile.occupation })));
-                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "And has an affinity towards s:0", null, new List<string> { investigatee.profile.preferredTool })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They like to use w:0", null, null, new List<string> { investigatee.profile.preferredTool })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "And they enjoy hanging out s:0", null, new List<string> { investigatee.profile.preferredLocation })));
 
-                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 really likes s:0", new List<Character> { investigatee }, new List<string> { investigatee.loves })));
-                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "and despises s:0", null, new List<string> { investigatee.hates })));
+                //yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 really likes s:0", new List<Character> { investigatee }, new List<string> { investigatee.loves })));
+                //yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "and despises s:0", null, new List<string> { investigatee.hates })));
 
 
                 // their occupation
@@ -127,8 +128,7 @@ public class GameController : MonoBehaviour {
                 // Randomly select between:
                 //  - Talking about murder weapon
                 //  - Talking about location
-                //  - talking about afinity
-                int topic = Random.Range(0, 3);
+                int topic = Random.Range(0, 2);
                 Debug.Log("Selected Topic is " + new string[] {"weapon", "location", "affinity" }[topic]);
 
                 // Choose a character you will tell <investigatee> <something> about
@@ -218,7 +218,7 @@ public class GameController : MonoBehaviour {
                     }
 
                     // Reshuffle the list of profiles
-                    for (int j = profiles.Count - 1; i > 0; i--) {
+                    for (int j = profiles.Count - 1; j > 0; j--) {
                         int r = Random.Range(0, j);
                         var temp = profiles[j];
                         profiles[j] = profiles[r];
@@ -262,7 +262,7 @@ public class GameController : MonoBehaviour {
                     }
 
                     // Reshuffle the list of profiles
-                    for (int j = profiles.Count - 1; i > 0; i--) {
+                    for (int j = profiles.Count - 1; j > 0; j--) {
                         int r = Random.Range(0, j);
                         var temp = profiles[j];
                         profiles[j] = profiles[r];
@@ -334,6 +334,45 @@ public class GameController : MonoBehaviour {
 
             // End of investigation round
         }
+    }
+
+    public IEnumerator Trial() {
+        // Tensions rise even higher as you fall deeper and deeper into your lies
+
+        // Out of the blue, x addresses you in front of the group!
+
+
+        // get x character who is sus of the character
+        // get a profile item Y that you told someone you like / are
+        // They ask "don't you like y?" 
+            // Yes => everyone thinks you like this item
+            // No => contradicts anyone who thought you did, greatly increases sus
+
+        // Who will you pin the blame on?
+        // Select a character
+
+        // If selected character is associated with weapon or place, you may lose sus
+
+        // You blame <blank>
+
+        // People's reactions
+
+        // Calculation
+
+        // If people confirm:
+            // The group believes you.
+            // <blank> goodbye
+            // Onto next round
+        // Else:
+            // The group does not believe you. They think you did it.
+            // This is the end.
+            // <you> goodbye
+            // Game over. Restart?
+                // Yes -> restart
+                // No -> quit
+         
+
+        yield return null;
     }
 
     public IEnumerator AdjustSusSlightly(Character c, bool increase)

@@ -85,8 +85,8 @@ public static class ProfileLibrary {
             new Profile("chef", "5 Star Chef", "knives", "in the kitchen"),
             new Profile("phot", "Professional Photographer", "a camera", "outside"),
             new Profile("zoo", "Part Time Zoo Keeper", "trained elephants", "at the circus"),
-            new Profile("plantboi", "Gardener", "a rusty hoe", "the garden"),
-            new Profile("doc", "Doctor", "a stethoscope", "at a hospital"),
+            new Profile("plantboi", "Gardener", "a rusty hoe", "in the garden"),
+            new Profile("doc", "Doctor", "a stethoscope", "at the hospital"),
             new Profile("asas", "Assasin", "poison", "in a dark allyway")
         };
     }
