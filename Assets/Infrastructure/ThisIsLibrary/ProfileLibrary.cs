@@ -25,6 +25,9 @@ public static class ProfileLibrary {
         return profilesUsed;
     }
 
+    public static Profile GetProfile(string profileID) {
+        return GetAllProfileMappings()[profileID];
+    }
 
     // Given a profile id, returns a weapon 
     public static string GetWeapon(string profileID) {

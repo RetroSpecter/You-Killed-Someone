@@ -184,15 +184,105 @@ public class GameController : MonoBehaviour {
             //  - Asking about preferred tools
             //  - Asking about favorite places
             //  - Asking about occupation
-            int question = Random.Range(0, 3);
-            Debug.Log("Selected Topic is " + new string[] { "preffered tools", "favorite place", "occupation" }[question]);
+            int questionType = Random.Range(0, 3);
+            Debug.Log("Selected Topic is " + new string[] { "preffered tools", "favorite place", "occupation" }[questionType]);
 
             // Randomly produce four options
+            var profiles = ProfileLibrary.GetFourProfiles();
+
             // Which do you like? / Which are you?
+            switch (questionType) {
+                // Asking about preferred tools
+                case 0:
+                    Profile murderWeaponProfile = ProfileLibrary.GetProfile(mp.weaponProfileID);
+                    // Ensure the murder weapon is in this list
+                    if (!profiles.Contains(murderWeaponProfile)) {
+                        profiles[0] = murderWeaponProfile;
+                    }
+                    // If investigatee already has a field filled for this, ensure it is in there too
+                    if (investigatee.believedPlayerToolID != "") {
+                        Profile believedPlayerToolProfile = ProfileLibrary.GetProfile(investigatee.believedPlayerToolID);
+                        if (!profiles.Contains(believedPlayerToolProfile)) {
+                            profiles[3] = believedPlayerToolProfile;
+                        }
+                    }
 
-            // Update investigatees perception of you
+                    // Reshuffle the list of profiles
+                    for (int j = profiles.Count - 1; i > 0; i--) {
+                        int r = Random.Range(0, j);
+                        var temp = profiles[j];
+                        profiles[j] = profiles[r];
+                        profiles[r] = temp;
+                    }
 
-            yield return null;
+                    // NPC Asks about if the player preferrs any of the above weapons
+
+                    // If selected weapon is murder weapon, increase sus moderately
+
+                    // if selected weapon contradicts what they know, increase sus greatly
+
+                    // Assign the the weapon
+
+                    break;
+                // Asking about favorite place
+                case 1:
+                    Profile murderLocationProfile = ProfileLibrary.GetProfile(mp.locationProfileID);
+                    // Ensure the murder location is in this list
+                    if (!profiles.Contains(murderLocationProfile)) {
+                        profiles[0] = murderLocationProfile;
+                    }
+                    // If investigatee already has a field filled for this, ensure it is in there too
+                    if (investigatee.believedPlayerLocationID != "") {
+                        Profile believedPlayerLocationProfile = ProfileLibrary.GetProfile(investigatee.believedPlayerLocationID);
+                        if (!profiles.Contains(believedPlayerLocationProfile)) {
+                            profiles[3] = believedPlayerLocationProfile;
+                        }
+                    }
+
+                    // Reshuffle the list of profiles
+                    for (int j = profiles.Count - 1; i > 0; i--) {
+                        int r = Random.Range(0, j);
+                        var temp = profiles[j];
+                        profiles[j] = profiles[r];
+                        profiles[r] = temp;
+                    }
+
+                    // NPC Asks about if the player preferrs any of the above locations
+
+                    // If selected location is murder location, increase sus moderately
+
+                    // if selected location contradicts what they know, increase sus greatly
+
+                    // Assign the the location
+
+                    break;
+                // Asking about occupation
+                case 2:
+                    // No need to ensure any occupation is in the list. We only care if the 
+                    //  investigatee already has their occupation field filled out
+                    if (investigatee.believedPlayerOccupationID != "") {
+                        Profile believedPlayerOccupationProfile = ProfileLibrary.GetProfile(investigatee.believedPlayerOccupationID);
+                        if (!profiles.Contains(believedPlayerOccupationProfile)) {
+                            profiles[Random.Range(0,3)] = believedPlayerOccupationProfile;
+                        }
+                    }
+
+
+                    // NPC Asks about if the player is any of the above occupations
+
+                    // If the murder location and/or weapon belongs to the occupation, increase sus slightly
+
+                    // if selected location contradicts what they know, increase sus greatly
+
+                    // Assign the the occupation
+
+
+                    break;
+                default:
+                    break;
+            }
+
+            // End of investigation round
         }
     }
 
