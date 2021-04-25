@@ -38,15 +38,21 @@ public class GameState : MonoBehaviour {
         ));
     }
 
+    public HashSet<string> GetAliveProfileID() {
+        return new HashSet<string>(this.GetAliveCharacters().Select(
+            character => { return character.profile.profileID; }
+        ));
+    }
 
-    public List<DialogueChoiceOption> GetMurderWeapons() {
-        return ProfileLibrary.GetFourProfiles().Select<Profile, DialogueChoiceOption>(
+
+    public List<DialogueChoiceOption> GetMurderWeapons(bool ensureOneLiving = false) {
+        return ProfileLibrary.GetFourProfiles(ensureOneLiving).Select<Profile, DialogueChoiceOption>(
             profile => {  return new DialogueChoiceOption(profile.profileID , new StoryText(profile.profileID, "w:0", null, null, new List<string>() { profile.preferredTool })); }
         ).ToList();
     }
 
-    public List<DialogueChoiceOption> GetMurderLocations() {
-        return ProfileLibrary.GetFourProfiles().Select<Profile, DialogueChoiceOption>(
+    public List<DialogueChoiceOption> GetMurderLocations(bool ensureOneLiving = false) {
+        return ProfileLibrary.GetFourProfiles(ensureOneLiving).Select<Profile, DialogueChoiceOption>(
             //profile => { return new DialogueChoiceOption(profile.profileID, profile.preferredLocation); }
             profile => { return new DialogueChoiceOption(profile.profileID, new StoryText(profile.profileID, "s:0", null, new List<string>() { profile.preferredLocation }, null)); }
         ).ToList();

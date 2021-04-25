@@ -12,6 +12,8 @@ public class Character {
     public string nickName;
 
     public const string playerID = "player";
+
+
     // Text
     public string hexColor;
 
@@ -44,7 +46,10 @@ public class Character {
         this.alive = true;
     }
 
-
+    // given a profileID, returns whether that is this character's profile
+    public bool MatchesCharacterProfile(string profileID) {
+        return this.profile.profileID == profileID;
+    }
 }
 
 
