@@ -100,12 +100,16 @@ public class GameController : MonoBehaviour {
             bool asking = recentlySelectedOption == 0;
 
 
-            if (asking) {
+            if (asking) {             
                 // character talks about themselves
-                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They introduce themselves as c:0", new List<Character> { })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They introduce themselves as c:0", new List<Character> { investigatee })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They are a s:0", null, new List<string> { investigatee.profile.occupation })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "And has an affinity towards s:0", null, new List<string> { investigatee.profile.preferredTool })));
+
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 really likes s:0", new List<Character> { investigatee }, new List<string> { investigatee.loves })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "and despises s:0", null, new List<string> { investigatee.hates })));
 
 
-                // gives their name
                 // their occupation
                 // their favorite object
                 // who they like
