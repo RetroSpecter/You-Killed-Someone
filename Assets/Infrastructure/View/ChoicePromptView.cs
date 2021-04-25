@@ -26,7 +26,7 @@ public class ChoicePromptView : MonoBehaviour
                 b.gameObject.SetActive(true);
 
                 int j = i;
-                b.UpdatePrompt(choices[i].optionText, _ => buttonSelected(j, callback));
+                b.UpdatePrompt(choices[i].optionText, _ => buttonSelected(j, callback), choices[i].optionID);
             } else {
                 buttons[i].gameObject.SetActive(false);
             }

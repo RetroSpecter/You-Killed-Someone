@@ -23,10 +23,8 @@ public class ViewController : MonoBehaviour
     public IEnumerator DisplayStoryText(StoryText story) {
         storyText.gameObject.SetActive(true); 
 
-        //for (int i = 0; i < story.text.Length; i++) {
-            storyText.AnimatePrompt(story, SetChoice);
-            yield return new WaitUntil(() => choice != -1);
-        //}
+        storyText.AnimatePrompt(story, SetChoice);
+        yield return new WaitUntil(() => choice != -1);
 
         storyText.gameObject.SetActive(false);
         ResetChoice();
@@ -75,6 +73,17 @@ public class ViewController : MonoBehaviour
         yield return new WaitUntil(() => choice != -1);
 
         characterView.gameObject.SetActive(false);
+        callback?.Invoke(choice);
+        ResetChoice();
+    }
+
+    public IEnumerator DisplayAskCharacterPrompt(DialogueChoice DialogueChoiceOption, Action<int> callback)
+    {
+        askCharacterView.gameObject.SetActive(true);
+        askCharacterView.UpdatePrompt(DialogueChoiceOption.prompt, DialogueChoiceOption.options, SetChoice);
+        yield return new WaitUntil(() => choice != -1);
+
+        askCharacterView.gameObject.SetActive(false);
         callback?.Invoke(choice);
         ResetChoice();
     }

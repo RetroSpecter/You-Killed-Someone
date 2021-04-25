@@ -5,7 +5,7 @@ using System.Linq;
 
 public static class CharacterLibrary {
 
-
+    public static Character PLAYER = new Character("You", "You", "You", "You");
     public static Dictionary<string, Character> LoadCharacters() {
         // Create all characters and add them to a list
         List<Character> allCharacters = new List<Character>();

@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8116206409ef53645bf85c79ac489d8e, type: 3}
+  m_Name: CharactrVisuals
+  m_EditorClassIdentifier: 
+  characterAttributes:
+  - name: Jerry
+    color: {r: 1, g: 0.82088774, b: 0.48627448, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  - name: Terry
+    color: {r: 0.48627448, g: 1, b: 0.52003986, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  - name: Larry
+    color: {r: 0.48627448, g: 0.81333447, b: 1, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  - name: Barry
+    color: {r: 0.48627448, g: 0.5028404, b: 1, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  - name: Claire
+    color: {r: 0.8752651, g: 0.48627448, b: 1, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  - name: Harry
+    color: {r: 1, g: 0.48627448, b: 0.58006436, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  - name: Merry
+    color: {r: 0.48627448, g: 1, b: 0.78262633, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  - name: Perry
+    color: {r: 0.62782216, g: 0.39551443, b: 0.8301887, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  - name: Garry
+    color: {r: 0.5554738, g: 0.6981132, b: 0.3457636, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  - name: You
+    color: {r: 1, g: 0, b: 0, a: 1}
+    soundPing: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}

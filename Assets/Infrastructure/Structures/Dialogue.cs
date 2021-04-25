@@ -15,10 +15,10 @@ public class DialogueChoice {
 
 
     // Constant Dialogue ID's
-    public static StoryText WHO_YOU_KILLED = new StoryText("whoYouKilled", "who did c:0 kill", new List<string> { StoryText.YOU });
-    public static StoryText MURDER_LOCATION = new StoryText("whereYouKilled", "where did c:0 kill", new List<string> { StoryText.YOU });
-    public static StoryText MURDER_WEAPON = new StoryText("howYouKilled", "how did c:0 kill", new List<string> { StoryText.YOU });
-    public static StoryText DISCOVER_BODY = new StoryText("youDiscoveredBody", "did c:0 \"discover\" the body", new List<string> { StoryText.YOU });
+    public static StoryText WHO_YOU_KILLED = new StoryText("whoYouKilled", "who did c:0 kill", new List<Character> { CharacterLibrary.PLAYER });
+    public static StoryText MURDER_LOCATION = new StoryText("whereYouKilled", "where did c:0 kill", new List<Character> { CharacterLibrary.PLAYER });
+    public static StoryText MURDER_WEAPON = new StoryText("howYouKilled", "how did c:0 kill", new List<Character> { CharacterLibrary.PLAYER });
+    public static StoryText DISCOVER_BODY = new StoryText("youDiscoveredBody", "did c:0 \"discover\" the body", new List<Character> { CharacterLibrary.PLAYER });
 
     // Yes No constructor
     public DialogueChoice(StoryText prompt) {
@@ -55,7 +55,7 @@ public class DialogueChoice {
         // Turn each character into a dialogue choice
         this.options = new List<DialogueChoiceOption>(characters.Select<Character, DialogueChoiceOption>(
             character => {
-                return new DialogueChoiceOption(character.characterID, new StoryText("c:0", "c:0", new List<string>() { character.fullName }));
+                return new DialogueChoiceOption(character.characterID, new StoryText("c:0", "c:0", new List<Character>() { character }));
             }
         ));
     }
@@ -194,11 +194,11 @@ public class CharacterText {
 public class StoryText {
     public string textID;
     public string text;
-    public List<string> characters;
+    public List<Character> characters;
     public List<string> scenery;
     public List<string> weapons;
 
-    public StoryText(StoryText storyText, List<string> characters = null, List<string> scenery = null, List<string> weapon = null) {
+    public StoryText(StoryText storyText, List<Character> characters = null, List<string> scenery = null, List<string> weapon = null) {
         this.textID = storyText.textID;
         this.text = storyText.text;
 
@@ -207,7 +207,7 @@ public class StoryText {
         this.weapons = weapon;
     }
 
-    public StoryText(string textID, string text, List<string> characters = null, List<string> scenery = null, List<string> weapon = null) {
+    public StoryText(string textID, string text, List<Character> characters = null, List<string> scenery = null, List<string> weapon = null) {
         this.textID = textID;
         this.text = text;
 
@@ -226,7 +226,7 @@ public class StoryText {
 
             if (word.StartsWith("c:")) {
                 int val = int.Parse(word.Split(':')[1]);
-                ret += characters[val] + " ";
+                ret += characters[val].nickName + " ";
             } else if (word.StartsWith("s:")) {
                 int val = int.Parse(word.Split(':')[1]);
                 ret += scenery[val] + " ";
@@ -241,7 +241,7 @@ public class StoryText {
         return ret;
     }
 
-    public List<Color> MapColor() {
+    public List<Color> MapColor(CharacterAttributesLookup cal) {
         List<Color> ret = new List<Color>();
         string[] words = text.Split(' ');
 
@@ -251,8 +251,15 @@ public class StoryText {
 
             if (word.StartsWith("c:")) {
                 int val = int.Parse(word.Split(':')[1]);
-                foreach (char c in characters[val])
-                    ret.Add(Color.red);
+                Character character = characters[val];
+
+                if (cal == null)
+                    Debug.LogError("vah");
+                
+                Color characterColor = cal.GetCharacterAttributes(character.characterID).color;
+
+                foreach (char c in characters[val].nickName)
+                    ret.Add(characterColor);
             } else if (word.StartsWith("s:")) {
                 int val = int.Parse(word.Split(':')[1]);
 
@@ -274,9 +281,7 @@ public class StoryText {
         return ret;
     }
 
-    public static string YOU = "YOU";
-
-    public static StoryText YOU_KILLED_SOMEONE = new StoryText("killed",  "c:0 killed someone" , new List<string> { YOU });
+    public static StoryText YOU_KILLED_SOMEONE = new StoryText("killed",  "c:0 killed someone" , new List<Character> { CharacterLibrary.PLAYER });
     public static StoryText YOU_KILLED_X_WITH_Y_AT_Z = new StoryText("killedXYZ", "You killed %s with %s" );
     public static StoryText X_FINDS_THE_BODY = new StoryText("findBody", "%s finds the body" );
 
