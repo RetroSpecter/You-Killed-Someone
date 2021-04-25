@@ -341,9 +341,9 @@ public class GameController : MonoBehaviour {
         c.AdjustSusSlightly(increase);
 
         if (increase)
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_AGREES, new List<Character> { c })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_DISAGREES , new List<Character> { c })));
         else
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_DISAGREES, new List<Character> { c })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_AGREES, new List<Character> { c })));
     }
 
     public IEnumerator AdjustSusModerately(Character c, bool increase)
@@ -351,9 +351,9 @@ public class GameController : MonoBehaviour {
         c.AdjustSusModerately(increase);
 
         if(increase)
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 nods reassuredly", new List<Character> { c })));
-        else
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 seems a bit suspicious", new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 nods reassuredly", new List<Character> { c })));
 
 
     }
@@ -362,9 +362,9 @@ public class GameController : MonoBehaviour {
     {
         c.AdjustSusGreatly(increase);
         if (increase)
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you completely", new List<Character> { c })));
-        else
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 doesn't believe a single word you said.", new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you completely", new List<Character> { c })));
 
     }
 
