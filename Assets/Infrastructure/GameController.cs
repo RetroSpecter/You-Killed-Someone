@@ -184,8 +184,8 @@ public class GameController : MonoBehaviour {
             //  - Asking about preferred tools
             //  - Asking about favorite places
             //  - Asking about occupation
-            int topic = Random.Range(0, 3);
-            Debug.Log("Selected Topic is " + new string[] { "preffered tools", "favorite place", "occupation" }[topic]);
+            int question = Random.Range(0, 3);
+            Debug.Log("Selected Topic is " + new string[] { "preffered tools", "favorite place", "occupation" }[question]);
 
             // Randomly produce four options
             // Which do you like? / Which are you?
