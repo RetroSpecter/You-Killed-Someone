@@ -67,9 +67,19 @@ public class DialogueChoice {
         return new DialogueChoice(talkOrTell, DialogueChoiceOption.ASK, DialogueChoiceOption.TELL);
     }
 
-    public static DialogueChoice CreateYouTellChoice(Character beingTalkedto, string thingText) {
+    public static DialogueChoice CreateYouTellChoice(Character beingTalkedto, string weaponText = "", string locationText = "", Character affinity = null) {
         // You tell <character> that __ likes <string>
-        StoryText tell = new StoryText("YouTell", "c:0 tell c:1 that ____ likes " + thingText, new List<Character> { CharacterLibrary.PLAYER, beingTalkedto });
+        StoryText tell;
+        if (weaponText != "") {
+            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ likes w:2 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto },
+                null, new List<string> { weaponText });
+        } else if (locationText != "") {
+            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ loves being s:2 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto },
+                new List<string> { locationText });
+        } else {
+            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ hates c:2 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto, affinity });
+        }
+
         return new DialogueChoice(tell, GameState.Instance.GetAliveCharacters());
     }
 

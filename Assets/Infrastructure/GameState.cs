@@ -19,6 +19,7 @@ public class GameState : MonoBehaviour {
             Instance = this;
             this.characters = CharacterLibrary.LoadCharacters();
             ProfileLibrary.AssignProfiles(this.characters.Values.ToList());
+            CharacterLibrary.AssignAffinities(characters.Values.ToList());
         }
     }
 
