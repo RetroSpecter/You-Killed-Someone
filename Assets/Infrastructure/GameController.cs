@@ -550,6 +550,37 @@ public class GameController : MonoBehaviour {
         yield return null;
     }
 
+    public IEnumerator AdjustSusSlightly(Character c, bool increase)
+    {
+        c.AdjustSusSlightly(increase);
+
+        if (increase)
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 seems a bit suspicious of c:1", new List<Character> { c, CharacterLibrary.PLAYER })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 seems a little less warry of you", new List<Character> { c })));
+    }
+
+    public IEnumerator AdjustSusModerately(Character c, bool increase)
+    {
+        c.AdjustSusModerately(increase);
+
+        if (increase)
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is clearly uneasy", new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 feel c:1 relax after hearing that", new List<Character> { CharacterLibrary.PLAYER, c })));
+
+
+    }
+
+    public IEnumerator AdjustSusGreatly(Character c, bool increase)
+    {
+        c.AdjustSusGreatly(increase);
+        if (increase)
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 doesn't believe a single word you said.", new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you completely", new List<Character> { c })));
+    }
+
     public void SelectOption(int selectedOption) {
         this.recentlySelectedOption = selectedOption;
     }

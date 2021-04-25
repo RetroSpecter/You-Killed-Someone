@@ -175,9 +175,9 @@ public class DialogueChoiceOption {
     public static StoryText NO = new StoryText("no", "no");
 
     public static DialogueChoiceOption ASK
-        = new DialogueChoiceOption("ask", new StoryText("ASK", "Ask"));
+        = new DialogueChoiceOption("ask", new StoryText("ASK", "Ask about themselves"));
     public static DialogueChoiceOption TELL
-        = new DialogueChoiceOption("tell", new StoryText("TELL", "Tell"));
+        = new DialogueChoiceOption("tell", new StoryText("TELL", "Tell about others"));
 
     public static StoryText WEAPON = new StoryText("weapon", "w:0" );
     public static StoryText SCENERY = new StoryText("scenery", "s:0" );
