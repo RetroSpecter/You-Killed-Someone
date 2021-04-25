@@ -149,14 +149,15 @@ public class GameController : MonoBehaviour {
                         break;
                 }
 
+
+                // If correct, sus of you goes down.
+                // If incorrect, sus of you goes up
                 Debug.Log("What you told " + investigatee.nickName + " is " + correct);
                 if (correct) {
                     investigatee.AdjustSusSlightly(false);
                 } else {
                     investigatee.AdjustSusModerately(true);
                 }
-                // If correct, sus of you goes down.
-                // If incorrect, sus of you goes up
             }
 
 
