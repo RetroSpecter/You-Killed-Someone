@@ -34,6 +34,11 @@ public class GenericTextView : MonoBehaviour
     private Sequence AnimatePerWord(StoryText text) {
         textMeshPro.text = text.ProcessText();
 
+        if (text.settings != null)
+        {
+            textMeshPro.fontStyle = text.settings.strikethrough ? FontStyles.Strikethrough : FontStyles.Normal;
+        }
+
         List<Color> ColorMapping = text.MapColor(attributesLookup);
         CharTweener _tweener = textMeshPro.GetCharTweener();
         TMP_WordInfo[] words = textMeshPro.textInfo.wordInfo;
@@ -57,8 +62,14 @@ public class GenericTextView : MonoBehaviour
         return sequence;
     }
 
-    private Sequence AnimatePerCharacter(StoryText text, string characterIndex = "") {
+    private Sequence AnimatePerCharacter(StoryText text,  string characterIndex = "") {
         textMeshPro.color = Color.clear;
+
+        if (text.settings != null)
+        {
+            textMeshPro.fontStyle = text.settings.strikethrough ? FontStyles.Strikethrough : FontStyles.Normal;
+        }
+
         textMeshPro.text = text.ProcessText();
         List<Color> ColorMapping = text.MapColor(attributesLookup);
         CharTweener _tweener = textMeshPro.GetCharTweener();
@@ -89,6 +100,12 @@ public class GenericTextView : MonoBehaviour
     public void UpdatePrompt(StoryText text, Action<int> callback, string characterIndex = "")
     {
         textMeshPro.text = text.ProcessText();
+
+        if (text.settings != null)
+        {
+            textMeshPro.fontStyle = text.settings.strikethrough ? FontStyles.Strikethrough : FontStyles.Normal;
+        }
+
         List<Color> ColorMapping = text.MapColor(attributesLookup);
         CharTweener _tweener = textMeshPro.GetCharTweener();
 
@@ -111,4 +128,22 @@ public class GenericTextView : MonoBehaviour
     public void CancelButton() {
         button.gameObject.SetActive(false);
     }
+}
+
+
+public class TextSettings {
+    public static TextSettings DEFAULT = new TextSettings(1, false, 0);
+
+    public int speed;
+    public bool strikethrough;
+
+    public int shake;
+    public TextSettings(int speed, bool strikethrough, int shake)
+    {
+        this.speed = speed;
+        this.strikethrough = strikethrough;
+        this.shake = shake;
+    }
+
+
 }

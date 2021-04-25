@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
         MurderProfile mp = new MurderProfile();
 
         // Give Choice: Who
-        DialogueChoice whoYouKilled = new DialogueChoice(DialogueChoice.WHO_YOU_KILLED, GameState.Instance.GetAliveCharacters());
+        DialogueChoice whoYouKilled = new DialogueChoice(DialogueChoice.WHO_YOU_KILLED, GameState.Instance.GetCharacters());
         yield return StartCoroutine(vc.DisplayPrompt(whoYouKilled, SelectOption));
         yield return null;
 
@@ -90,7 +90,7 @@ public class GameController : MonoBehaviour {
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is cautiously eyeing each other")));
 
             // Who will you talk to?
-            DialogueChoice talkToSomeone = new DialogueChoice(DialogueChoice.WHO_TO_TALK_TO, GameState.Instance.GetAliveCharacters());
+            DialogueChoice talkToSomeone = new DialogueChoice(DialogueChoice.WHO_TO_TALK_TO, GameState.Instance.GetCharacters());
             yield return StartCoroutine(vc.DisplayPrompt(talkToSomeone, SelectOption));
             Character investigatee = GameState.GetCharacter(talkToSomeone.GetOptionID(recentlySelectedOption));
 
@@ -100,12 +100,16 @@ public class GameController : MonoBehaviour {
             bool asking = recentlySelectedOption == 0;
 
 
-            if (asking) {
+            if (asking) {             
                 // character talks about themselves
-                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They introduce themselves as c:0", new List<Character> { })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They introduce themselves as c:0", new List<Character> { investigatee })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They are a s:0", null, new List<string> { investigatee.profile.occupation })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "And has an affinity towards s:0", null, new List<string> { investigatee.profile.preferredTool })));
+
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 really likes s:0", new List<Character> { investigatee }, new List<string> { investigatee.loves })));
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "and despises s:0", null, new List<string> { investigatee.hates })));
 
 
-                // gives their name
                 // their occupation
                 // their favorite object
                 // who they like
@@ -169,9 +173,9 @@ public class GameController : MonoBehaviour {
                 // If incorrect, sus of you goes up
                 Debug.Log("What you told " + investigatee.nickName + " is " + correct);
                 if (correct) {
-                    investigatee.AdjustSusSlightly(false);
+                    yield return StartCoroutine(AdjustSusSlightly(investigatee, false));
                 } else {
-                    investigatee.AdjustSusModerately(true);
+                    yield return StartCoroutine(AdjustSusModerately(investigatee, false));
                 }
             }
 
@@ -292,7 +296,37 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    public IEnumerator AdjustSusSlightly(Character c, bool increase)
+    {
+        c.AdjustSusSlightly(increase);
 
+        if (increase)
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_AGREES, new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_DISAGREES, new List<Character> { c })));
+    }
+
+    public IEnumerator AdjustSusModerately(Character c, bool increase)
+    {
+        c.AdjustSusModerately(increase);
+
+        if(increase)
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 nods reassuredly", new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 seems a bit suspicious", new List<Character> { c })));
+
+
+    }
+
+    public IEnumerator AdjustSusGreatly(Character c, bool increase)
+    {
+        c.AdjustSusGreatly(increase);
+        if (increase)
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you completely", new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 doesn't believe a single word you said.", new List<Character> { c })));
+
+    }
 
     public void SelectOption(int selectedOption) {
         this.recentlySelectedOption = selectedOption;
