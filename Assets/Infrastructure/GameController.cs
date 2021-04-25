@@ -419,17 +419,14 @@ public class GameController : MonoBehaviour {
     }
 
     public IEnumerator Trial() {
-        // Tensions rise even higher as you fall deeper and deeper into your lies
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
-            "Tensions are rising as you fall deeper and deeper into your lies", new List<Character> { CharacterLibrary.PLAYER })));
-
+        var mp = GameState.Instance.GetMostRecentMurderProfile();
 
         // get x character who is sus of the character
         // get a profile item Y that you told someone you like / are
-        Character blamer;
+        Character accuser;
         List<Character> allChars = GameState.Instance.GetAliveCharacters();
         allChars.Sort( (x, y) => { return y.sus - x.sus; });
-        blamer = allChars[Random.Range(0, allChars.Count / 2)];
+        accuser = allChars[Random.Range(0, allChars.Count / 2)];
 
         AskedQuestion askedQuestion = GameState.Instance.GetRandomQuestion();
         string playerAnswer = askedQuestion.answerID;
@@ -438,19 +435,19 @@ public class GameController : MonoBehaviour {
 
         // Out of the blue, x addresses you in front of the group!
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
-            "Out of the blue, c:0 addresses c:1 in front of the group!", new List<Character> { blamer, CharacterLibrary.PLAYER })));
+            "Out of the blue, c:0 addresses c:1 in front of the group!", new List<Character> { accuser, CharacterLibrary.PLAYER })));
 
         // They ask "don't you like y?"
         StoryText storyQuestion;
         if (questionType == 0) {
             storyQuestion = new StoryText("", "c:0 asks \"Hey, don't c:1 like w:0",
-                new List<Character> { blamer, CharacterLibrary.PLAYER }, null, new List<string> { askedQuestion.GetAnswerText() });
+                new List<Character> { accuser, CharacterLibrary.PLAYER }, null, new List<string> { askedQuestion.GetAnswerText() });
         } else if (questionType == 1) {
             storyQuestion = new StoryText("", "c:0 asks \"Hey, don't c:1 like hanging out s:0",
-                new List<Character> { blamer, CharacterLibrary.PLAYER }, new List<string> { askedQuestion.GetAnswerText() });
+                new List<Character> { accuser, CharacterLibrary.PLAYER }, new List<string> { askedQuestion.GetAnswerText() });
         } else {
             storyQuestion = new StoryText("", "c:0 asks \"Hey, aren't c:1 a s:0",
-                new List<Character> { blamer, CharacterLibrary.PLAYER }, new List<string> { askedQuestion.GetAnswerText() });
+                new List<Character> { accuser, CharacterLibrary.PLAYER }, new List<string> { askedQuestion.GetAnswerText() });
         }
         DialogueChoice dontYouQuestion = new DialogueChoice(storyQuestion);
         yield return StartCoroutine(vc.DisplayPrompt(dontYouQuestion, SelectOption));
@@ -494,14 +491,47 @@ public class GameController : MonoBehaviour {
             }
         }
 
-        // Who will you pin the blame on?
-        // Select a character
 
-        // If selected character is associated with weapon or place, you may lose sus
+        // Tensions rise even higher as you fall deeper and deeper into your lies
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+            "Tensions are rising as you fall deeper and deeper into your lies", new List<Character> { CharacterLibrary.PLAYER })));
+
+        // Who will you pin the blame on?
+        DialogueChoice blameChoice = new DialogueChoice(new StoryText("", "c:0 need an escape. Who will c:0 blame for the murder?",
+            new List<Character> { CharacterLibrary.PLAYER }), GameState.Instance.GetCharacters());
+        yield return StartCoroutine(vc.DisplayPrompt(blameChoice, SelectOption));
+        Character characterBlamed = GameState.GetCharacter(blameChoice.GetOptionID(recentlySelectedOption));
+
 
         // You blame <blank>
 
+
         // People's reactions
+        // If selected character is associated with weapon or place, you lose sus
+        if (characterBlamed.profile.profileID == mp.weaponProfileID) {
+            foreach(var c in GameState.Instance.GetAliveCharacters()) {
+                c.AdjustSusSlightly(false);
+            }
+
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone thinks that makes sense, given c:0 likes w:0",
+                new List<Character> { characterBlamed }, null, new List<string> { ProfileLibrary.GetWeapon(mp.weaponProfileID) })));
+        } else if (characterBlamed.profile.profileID == mp.locationProfileID) {
+            foreach (var c in GameState.Instance.GetAliveCharacters()) {
+                c.AdjustSusSlightly(false);
+            }
+
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone thinks that makes sense, given c:0 likes hanging out s:0",
+                new List<Character> { characterBlamed }, new List<string> { ProfileLibrary.GetWeapon(mp.locationProfileID) })));
+        } else if (characterBlamed.profile.profileID == mp.weaponProfileID && characterBlamed.profile.profileID == mp.locationProfileID) {
+            foreach (var c in GameState.Instance.GetAliveCharacters()) {
+                c.AdjustSusModerately(false);
+            }
+
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone thinks that makes sense, given c:0 works s:0 and uses w:0",
+                new List<Character> { characterBlamed }, new List<string> { ProfileLibrary.GetWeapon(mp.locationProfileID) },
+                new List<string> { ProfileLibrary.GetWeapon(mp.weaponProfileID) })));
+        }
+
 
         // Calculation
 
