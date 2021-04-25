@@ -31,6 +31,10 @@ public class GameState : MonoBehaviour {
         discoverer = mp.bodyDiscovererID;
     }
 
+    public static Character GetCharacter(string characterID) {
+        return Instance.characters[characterID];
+    }
+
 
     public List<Character> GetAliveCharacters() {
         return new List<Character>(this.characters.Values.Where<Character>(

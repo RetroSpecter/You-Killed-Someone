@@ -20,6 +20,8 @@ public class DialogueChoice {
     public static StoryText MURDER_WEAPON = new StoryText("howYouKilled", "how did c:0 kill", new List<string> { StoryText.YOU });
     public static StoryText DISCOVER_BODY = new StoryText("youDiscoveredBody", "did c:0 \"discover\" the body", new List<string> { StoryText.YOU });
 
+    public static StoryText WHO_TO_TALK_TO = new StoryText("talkToWhom", "Who will c:0 talk to?", new List<string> { StoryText.YOU });
+
     // Yes No constructor
     public DialogueChoice(StoryText prompt) {
         this.type = DialogueChoiceType.yesNo;
@@ -60,6 +62,11 @@ public class DialogueChoice {
         ));
     }
 
+    public static DialogueChoice CreateAskOrTellChoice(Character beingTalkedto) {
+        StoryText talkOrTell = new StoryText("AskOrTell", "Will c:0 ask or tell c:1?", new List<string> { StoryText.YOU , beingTalkedto.fullName});
+        return new DialogueChoice(talkOrTell, DialogueChoiceOption.ASK, DialogueChoiceOption.TELL);
+    }
+
 
     public bool isYesNo() {
         return this.type == DialogueChoiceType.yesNo;
@@ -75,6 +82,10 @@ public class DialogueChoice {
 
     public bool isCharacterSelect() {
         return this.type == DialogueChoiceType.characterSelect;
+    }
+
+    public string GetOptionID(int option) {
+        return this.options[option].optionID;
     }
 
 
@@ -98,6 +109,11 @@ public class DialogueChoiceOption {
 
     public static StoryText YES = new StoryText("yes", "yes");
     public static StoryText NO = new StoryText("no", "no");
+
+    public static DialogueChoiceOption ASK
+        = new DialogueChoiceOption("ask", new StoryText("ASK", "Ask"));
+    public static DialogueChoiceOption TELL
+        = new DialogueChoiceOption("tell", new StoryText("TELL", "Tell"));
 
     public static StoryText WEAPON = new StoryText("weapon", "w:0" );
     public static StoryText SCENERY = new StoryText("scenery", "s:0" );
