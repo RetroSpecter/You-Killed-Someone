@@ -216,6 +216,8 @@ public class GameController : MonoBehaviour {
                     }
 
                     // NPC Asks about if the player preferrs any of the above weapons
+                    DialogueChoice weaponsQuestion = DialogueChoice.CreateAQuestion(investigatee, profiles);
+                    yield return StartCoroutine(vc.DisplayPrompt(weaponsQuestion, SelectOption));
 
                     // If selected weapon is murder weapon, increase sus moderately
 
@@ -248,6 +250,8 @@ public class GameController : MonoBehaviour {
                     }
 
                     // NPC Asks about if the player preferrs any of the above locations
+                    DialogueChoice locationsQuestion = DialogueChoice.CreateAQuestion(investigatee, null, profiles);
+                    yield return StartCoroutine(vc.DisplayPrompt(locationsQuestion, SelectOption));
 
                     // If selected location is murder location, increase sus moderately
 
@@ -269,6 +273,8 @@ public class GameController : MonoBehaviour {
 
 
                     // NPC Asks about if the player is any of the above occupations
+                    DialogueChoice occupationsQuestion = DialogueChoice.CreateAQuestion(investigatee, null, profiles);
+                    yield return StartCoroutine(vc.DisplayPrompt(occupationsQuestion, SelectOption));
 
                     // If the murder location and/or weapon belongs to the occupation, increase sus slightly
 

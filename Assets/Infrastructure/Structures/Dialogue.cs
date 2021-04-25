@@ -67,24 +67,63 @@ public class DialogueChoice {
         return new DialogueChoice(talkOrTell, DialogueChoiceOption.ASK, DialogueChoiceOption.TELL);
     }
 
-    public static DialogueChoice CreateYouTellChoice(Character beingTalkedto, string weaponText = "", string locationText = "", Character affinity = null) {
+    public static DialogueChoice CreateYouTellChoice(Character beingTalkedTo, string weaponText = "", string locationText = "", Character affinity = null) {
         // You tell <character> that __ likes <string>
         StoryText tell;
         if (weaponText != "") {
-            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ likes w:2 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto },
+            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ likes w:0", new List<Character> { CharacterLibrary.PLAYER, beingTalkedTo },
                 null, new List<string> { weaponText });
         } else if (locationText != "") {
-            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ loves being s:2 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto },
+            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ loves being s:0", new List<Character> { CharacterLibrary.PLAYER, beingTalkedTo },
                 new List<string> { locationText });
         } else {
-            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ hates c:2 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto, affinity });
+            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ hates c:2", new List<Character> { CharacterLibrary.PLAYER, beingTalkedTo, affinity });
         }
 
         return new DialogueChoice(tell, GameState.Instance.GetAliveCharacters());
     }
 
-    public static DialogueChoice CreateAQuestion(Character asking) {
-        return null;
+    public static DialogueChoice CreateAQuestion(Character beingTalkedTo, List<Profile> weaponProfiles = null,
+            List<Profile> locationProfiles = null, List<Profile> occupationProfiles = null) {
+        // TODO: update this with occupation escape keys later
+
+        StoryText question;
+        List<DialogueChoiceOption> dialogueOptions;
+        if (weaponProfiles != null) {
+            question = new StoryText("CharacterAsks", "c:0 asks if c:1 have a w:0", new List<Character> { beingTalkedTo, CharacterLibrary.PLAYER },
+                null, new List<string> { "favorite tool" });
+
+            dialogueOptions = new List<DialogueChoiceOption>(weaponProfiles.Select(
+                profile => {
+                    return new DialogueChoiceOption(profile.profileID,
+                        new StoryText(profile.profileID, "w:0", null, null, new List<string>() { profile.preferredTool }));
+                }
+            ));
+
+        } else if (locationProfiles != null) {
+            question = new StoryText("CharacterAsks", "c:0 asks where c:1 like s:0 the most", new List<Character> { beingTalkedTo, CharacterLibrary.PLAYER },
+                new List<string> { "being at" });
+
+            dialogueOptions = new List<DialogueChoiceOption>(locationProfiles.Select(
+                profile => {
+                    return new DialogueChoiceOption(profile.profileID,
+                        new StoryText(profile.profileID, "s:0", null, new List<string>() { profile.preferredLocation }));
+                }
+            ));
+        } else {
+            question = new StoryText("CharacterAsks", "c:0 asks if c:1 have an s:0", new List<Character> { beingTalkedTo, CharacterLibrary.PLAYER },
+                new List<string> { "occupation" });
+
+            dialogueOptions = new List<DialogueChoiceOption>(occupationProfiles.Select(
+                profile => {
+                    return new DialogueChoiceOption(profile.profileID,
+                        new StoryText(profile.profileID, "s:0", null, new List<string>() { profile.occupation }));
+                }
+            ));
+        }
+
+        
+        return new DialogueChoice(question, dialogueOptions);
     }
 
 
