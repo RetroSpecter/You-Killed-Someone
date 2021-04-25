@@ -56,6 +56,7 @@ public static class ProfileLibrary {
         }
 
         if (ensureLiving) {
+            // Keep pulling profiles until you get one that is living
             while (!matchesLiving) {
                 selectedProfiles.RemoveAt(0);
 
