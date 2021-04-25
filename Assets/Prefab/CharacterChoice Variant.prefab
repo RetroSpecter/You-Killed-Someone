@@ -108,7 +108,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -64, y: 51}
+  m_AnchoredPosition: {x: -64, y: 58}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1539640634292005042
@@ -142,7 +142,9 @@ MonoBehaviour:
 
     item:
 
-    place:'
+    place:
+
+    suspicion:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb4dcb51251760a47b81567fa273882c, type: 2}
   m_sharedMaterial: {fileID: 4150987034069935066, guid: fb4dcb51251760a47b81567fa273882c,
@@ -181,7 +183,7 @@ MonoBehaviour:
   m_textAlignment: 257
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 50.25
+  m_lineSpacing: 15.99
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -212,12 +214,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -122.97066, w: 0}
   m_textInfo:
     textComponent: {fileID: 6820722829355881314}
-    characterCount: 17
+    characterCount: 28
     spriteCount: 0
-    spaceCount: 2
-    wordCount: 3
+    spaceCount: 3
+    wordCount: 4
     linkCount: 0
-    lineCount: 3
+    lineCount: 4
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -306,6 +308,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6025976448733410543, guid: 45da03905eaf4834eb0d55d7d96420df,
+        type: 3}
+      propertyPath: buttonSFX
+      value: 
+      objectReference: {fileID: 11400000, guid: a62e2f65874217e4792ecbb5d5b9f7f0,
+        type: 2}
     - target: {fileID: 8022504234189079817, guid: 45da03905eaf4834eb0d55d7d96420df,
         type: 3}
       propertyPath: m_textAlignment

@@ -13,6 +13,7 @@ public class GenericTextView : MonoBehaviour
     [SerializeField] public Button button; // should be private but im lazy
     [SerializeField] private CharacterAttributesLookup attributesLookup;
     [SerializeField] private SoundEffectProfile defaultTextTic;
+    [SerializeField] private SoundEffectProfile buttonSFX;
 
     public void AnimatePrompt(StoryText text, Action<int> callback, string characterIndex = "")
     {
@@ -41,13 +42,13 @@ public class GenericTextView : MonoBehaviour
 
         while (i < textMeshPro.text.Length) {
             int j = i;
+            sequence.AppendCallback(() => textBlip?.Play());
             while (j < textMeshPro.text.Length-1 && textMeshPro.text[j] != ' ') {
-
                 sequence.Join(_tweener.DOColor(j, ColorMapping[j], 0.01f))
                 .Join(_tweener.DOScale(j, 0, 0.01f).From());
                 j++;
             }
-            sequence.AppendCallback(() => textBlip?.Play());
+
             sequence.AppendInterval(text.settings.speed);
             i = j;
             i++;
@@ -76,8 +77,8 @@ public class GenericTextView : MonoBehaviour
             var timeOffset = Mathf.Lerp(0, 1, i / (float)(textMeshPro.text.Length + 1));
             var charSequence = DOTween.Sequence();
             charSequence.AppendCallback(() => textBlip?.Play())
-                .Join(_tweener.DOColor(i, ColorMapping[i], 0.1f))
-                .Join(_tweener.DOScale(i, 0, 0.2f).From().SetEase(Ease.OutBack, 5));
+                .Join(_tweener.DOColor(i, ColorMapping[i], 0.01f))
+                .Join(_tweener.DOScale(i, 0, 0.01f).From());
             sequence.Insert(timeOffset * text.settings.speed, charSequence);
         }
         
@@ -94,7 +95,7 @@ public class GenericTextView : MonoBehaviour
 
         if (GameState.Instance.characters.ContainsKey(characterIndex)) {
             Character target = GameState.Instance.characters[characterIndex];
-            GetComponent<InfoView>().SetInfo(target.profileKnown ? target.profile : null);
+            GetComponent<InfoView>().SetInfo(target);
         }
 
         List<Color> ColorMapping = text.MapColor(attributesLookup);
@@ -136,6 +137,7 @@ public class GenericTextView : MonoBehaviour
             button.onClick.AddListener(() =>
             {
                 callback?.Invoke(0);
+                buttonSFX?.Play();
                 button.onClick = new Button.ButtonClickedEvent();
             });
 
