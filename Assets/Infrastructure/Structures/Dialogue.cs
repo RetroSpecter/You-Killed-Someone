@@ -83,6 +83,10 @@ public class DialogueChoice {
         return new DialogueChoice(tell, GameState.Instance.GetAliveCharacters());
     }
 
+    public static DialogueChoice CreateAQuestion(Character asking) {
+        return null;
+    }
+
 
     public bool isYesNo() {
         return this.type == DialogueChoiceType.yesNo;
