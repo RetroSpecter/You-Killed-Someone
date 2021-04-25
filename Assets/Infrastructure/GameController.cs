@@ -104,29 +104,57 @@ public class GameController : MonoBehaviour {
                 //  - Talking about location
                 //  - talking about afinity
                 int topic = Random.Range(0, 3);
-                string topicText;
+                Debug.Log("Selected Topic is " + new string[] {"weapon", "location", "affinity" }[topic]);
+
+                // Choose a character you will tell <investigatee> <something> about
+                DialogueChoice tell;
                 switch (topic) {
                     // Talk about murder weapon
                     case 0:
-                        topicText = ProfileLibrary.GetWeapon(mp.weaponProfileID);
+                        tell = DialogueChoice.CreateYouTellChoice(investigatee, ProfileLibrary.GetWeapon(mp.weaponProfileID));
                         break;
+                    // Talk about Location 
                     case 1:
+                        tell = DialogueChoice.CreateYouTellChoice(investigatee, "", ProfileLibrary.GetLocation(mp.locationProfileID));
                         break;
+                    // Talk about Affinity
                     case 2:
+                        tell = DialogueChoice.CreateYouTellChoice(investigatee, "", "", mp.GetMurderedCharacter());
+                        break;
+                    default:
+                        tell = null;
+                        Debug.Log("random did not roll a number 0, 1, or 2");
+                        break;
+                }
+                yield return StartCoroutine(vc.DisplayPrompt(tell, SelectOption));
+                Character selectedCharacter = GameState.GetCharacter(tell.GetOptionID(recentlySelectedOption));
+
+                bool correct;
+                switch (topic) {
+                    // Talk about murder weapon
+                    case 0:
+                        correct = selectedCharacter.HoldsCharacterProfile(mp.weaponProfileID);
+                        break;
+                    // Talk about Location 
+                    case 1:
+                        correct = selectedCharacter.HoldsCharacterProfile(mp.locationProfileID);
+                        break;
+                    // Talk about Affinity
+                    case 2:
+                        correct = selectedCharacter.hates == mp.murderedCharacterID;
+                        break;
+                    default:
+                        correct = false;
+                        Debug.Log("random did not roll a number 0, 1, or 2");
                         break;
                 }
 
-
-                // Who will you say?
-                // Choose a character
-                DialogueChoice tell = DialogueChoice.CreateYouTellChoice(investigatee, "");
-                yield return StartCoroutine(vc.DisplayPrompt(tell, SelectOption));
-
-
-                // Result: <Character> likes <murder weapon>
-                // Result: <Character> likes <location>
-                // Result: <Character> hated <dead person>
-
+                Debug.Log("What you told " + investigatee.nickName + " is " + correct);
+                if (correct) {
+                    investigatee.AdjustSusSlightly(false);
+                } else {
+                    investigatee.AdjustSusModerately(true);
+                }
                 // If correct, sus of you goes down.
                 // If incorrect, sus of you goes up
             }

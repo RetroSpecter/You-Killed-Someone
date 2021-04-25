@@ -50,10 +50,11 @@ public class Character {
         this.hexColor = hexColor;
 
         this.alive = true;
+        this.sus = 50;
     }
 
-    // given a profileID, returns whether that is this character's profile
-    public bool MatchesCharacterProfile(string profileID) {
+    // given a profileID, returns whether it is this character's profile
+    public bool HoldsCharacterProfile(string profileID) {
         return this.profile.profileID == profileID;
     }
 
@@ -83,18 +84,24 @@ public class Character {
     public void AdjustSusSlightly(bool increase) {
         if (increase) {
             sus += 25;
+        } else {
+            sus -= 25;
         }
     }
 
     public void AdjustSusModerately(bool increase) {
         if (increase) {
             sus += 50;
+        } else {
+            sus -= 50;
         }
     }
     
     public void AdjustSusGreatly(bool increase) {
         if (increase) {
             sus += 75;
+        } else {
+            sus -= 75;
         }
     }
 }
