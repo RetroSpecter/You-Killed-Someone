@@ -460,8 +460,9 @@ public class GameController : MonoBehaviour {
         allChars.Sort( (x, y) => { return y.sus - x.sus; });
         blamer = allChars[Random.Range(0, allChars.Count / 2)];
 
-        AskedQuestion question = GameState.Instance.GetRandomQuestion();
-
+        AskedQuestion askedQuestion = GameState.Instance.GetRandomQuestion();
+        string playerAnswer = askedQuestion.answerID;
+        int questionType = askedQuestion.GetQuestionType();
 
 
         // Out of the blue, x addresses you in front of the group!
@@ -469,11 +470,58 @@ public class GameController : MonoBehaviour {
             "Out of the blue, c:0 addresses c:1 in front of the group!", new List<Character> { blamer, CharacterLibrary.PLAYER })));
 
         // They ask "don't you like y?"
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
-            "c:0 asks \"Hey, don't c:1 like ", new List<Character> { blamer, CharacterLibrary.PLAYER })));
+        StoryText storyQuestion;
+        if (questionType == 0) {
+            storyQuestion = new StoryText("", "c:0 asks \"Hey, don't c:1 like w:0",
+                new List<Character> { blamer, CharacterLibrary.PLAYER }, null, new List<string> { askedQuestion.GetAnswerText() });
+        } else if (questionType == 1) {
+            storyQuestion = new StoryText("", "c:0 asks \"Hey, don't c:1 like hanging out s:0",
+                new List<Character> { blamer, CharacterLibrary.PLAYER }, new List<string> { askedQuestion.GetAnswerText() });
+        } else {
+            storyQuestion = new StoryText("", "c:0 asks \"Hey, aren't c:1 a s:0",
+                new List<Character> { blamer, CharacterLibrary.PLAYER }, new List<string> { askedQuestion.GetAnswerText() });
+        }
+        DialogueChoice dontYouQuestion = new DialogueChoice(storyQuestion);
+        yield return StartCoroutine(vc.DisplayPrompt(dontYouQuestion, SelectOption));
+
+
+        // TODO: make it so if a character has a preconceived notion of you, they won't ask you a question
 
         // Yes => everyone thinks you like this item
         // No => contradicts anyone who thought you did, greatly increases sus
+        if (dontYouQuestion.GetOptionID(recentlySelectedOption) == DialogueChoiceOption.YES.textID) {
+            foreach (var c in GameState.Instance.GetAliveCharacters()) {
+                // Check for a contradiction between player's answer and their answer just now
+                // regardless of contradiction, change the chracter's belief
+                if (questionType == 0) {
+                    if (!c.MatchesBelievedPlayerTool(playerAnswer))
+                        yield return StartCoroutine(AdjustSusGreatly(c, true));
+                    c.believedPlayerToolID = playerAnswer;
+                } else if (questionType == 1) {
+                    if (!c.MatchesBelievedPlayerLocation(playerAnswer))
+                        yield return StartCoroutine(AdjustSusGreatly(c, true));
+                    c.believedPlayerLocationID = playerAnswer;
+                } else if (questionType == 2) {
+                    if (!c.MatchesBelievedPlayerOccupation(playerAnswer))
+                        yield return StartCoroutine(AdjustSusGreatly(c, true));
+                    c.believedPlayerOccupationID = playerAnswer;
+                }
+            }
+        } else {
+            // Check if any character thought you did, greatly increase their sus and remove
+            foreach(var c in GameState.Instance.GetAliveCharacters()) {
+                if (questionType == 0 && c.believedPlayerToolID == playerAnswer) {
+                    yield return StartCoroutine(AdjustSusGreatly(c, true));
+                    c.believedPlayerToolID = "";
+                } else if (questionType == 1 && c.believedPlayerLocationID == playerAnswer) {
+                    yield return StartCoroutine(AdjustSusGreatly(c, true));
+                    c.believedPlayerLocationID = "";
+                } else if (questionType == 2 && c.believedPlayerOccupationID == playerAnswer) {
+                    yield return StartCoroutine(AdjustSusGreatly(c, true));
+                    c.believedPlayerOccupationID = "";
+                }
+            }
+        }
 
         // Who will you pin the blame on?
         // Select a character
