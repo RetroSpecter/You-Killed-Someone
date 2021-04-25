@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator PlayGame() {
         yield return StartCoroutine(Murder());
+        yield return StartCoroutine(Investigation());
 
     }
 
