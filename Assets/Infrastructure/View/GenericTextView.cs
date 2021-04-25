@@ -13,6 +13,7 @@ public class GenericTextView : MonoBehaviour
     [SerializeField] public Button button; // should be private but im lazy
     [SerializeField] private CharacterAttributesLookup attributesLookup;
     [SerializeField] private SoundEffectProfile defaultTextTic;
+    [SerializeField] private SoundEffectProfile buttonSFX;
 
     public void AnimatePrompt(StoryText text, Action<int> callback, string characterIndex = "")
     {
@@ -94,7 +95,7 @@ public class GenericTextView : MonoBehaviour
 
         if (GameState.Instance.characters.ContainsKey(characterIndex)) {
             Character target = GameState.Instance.characters[characterIndex];
-            GetComponent<InfoView>().SetInfo(target.profileKnown ? target.profile : null);
+            GetComponent<InfoView>().SetInfo(target);
         }
 
         List<Color> ColorMapping = text.MapColor(attributesLookup);
@@ -136,6 +137,7 @@ public class GenericTextView : MonoBehaviour
             button.onClick.AddListener(() =>
             {
                 callback?.Invoke(0);
+                buttonSFX?.Play();
                 button.onClick = new Button.ButtonClickedEvent();
             });
 

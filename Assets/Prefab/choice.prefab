@@ -327,3 +327,4 @@ MonoBehaviour:
   button: {fileID: 8022504234599443720}
   attributesLookup: {fileID: 11400000, guid: 8f0eb1cf50e5a14499e6e302be9f33c0, type: 2}
   defaultTextTic: {fileID: 11400000, guid: 7205867333b603f41acaf5718e37395c, type: 2}
+  buttonSFX: {fileID: 11400000, guid: a62e2f65874217e4792ecbb5d5b9f7f0, type: 2}
