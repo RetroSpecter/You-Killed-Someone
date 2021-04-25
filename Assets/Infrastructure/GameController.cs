@@ -222,12 +222,22 @@ public class GameController : MonoBehaviour {
                     // NPC Asks about if the player preferrs any of the above weapons
                     DialogueChoice weaponsQuestion = DialogueChoice.CreateAQuestion(investigatee, profiles);
                     yield return StartCoroutine(vc.DisplayPrompt(weaponsQuestion, SelectOption));
+                    string selectedWeaponID = weaponsQuestion.GetOptionID(recentlySelectedOption);
 
                     // If selected weapon is murder weapon, increase sus moderately
+                    if (selectedWeaponID == mp.weaponProfileID) {
+                        investigatee.AdjustSusModerately(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
+                    }
 
                     // if selected weapon contradicts what they know, increase sus greatly
+                    if (!investigatee.MatchesBelievedPlayerTool(selectedWeaponID)) {
+                        investigatee.AdjustSusGreatly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                    }
 
                     // Assign the the weapon
+                    investigatee.believedPlayerToolID = selectedWeaponID;
 
                     break;
                 // Asking about favorite place
@@ -256,12 +266,22 @@ public class GameController : MonoBehaviour {
                     // NPC Asks about if the player preferrs any of the above locations
                     DialogueChoice locationsQuestion = DialogueChoice.CreateAQuestion(investigatee, null, profiles);
                     yield return StartCoroutine(vc.DisplayPrompt(locationsQuestion, SelectOption));
+                    string selectedLocationID = locationsQuestion.GetOptionID(recentlySelectedOption);
 
                     // If selected location is murder location, increase sus moderately
+                    if (selectedLocationID == mp.locationProfileID) {
+                        investigatee.AdjustSusModerately(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
+                    }
 
                     // if selected location contradicts what they know, increase sus greatly
+                    if (!investigatee.MatchesBelievedPlayerLocation(selectedLocationID)) {
+                        investigatee.AdjustSusGreatly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                    }
 
                     // Assign the the location
+                    investigatee.believedPlayerLocationID = selectedLocationID;
 
                     break;
                 // Asking about occupation
@@ -279,15 +299,29 @@ public class GameController : MonoBehaviour {
                     // NPC Asks about if the player is any of the above occupations
                     DialogueChoice occupationsQuestion = DialogueChoice.CreateAQuestion(investigatee, null, profiles);
                     yield return StartCoroutine(vc.DisplayPrompt(occupationsQuestion, SelectOption));
+                    string selectedOccupationID = occupationsQuestion.GetOptionID(recentlySelectedOption);
 
                     // If the murder location and/or weapon belongs to the occupation, increase sus slightly
+                    if (selectedOccupationID == mp.weaponProfileID) {
+                        investigatee.AdjustSusSlightly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has slightly raised to " + investigatee.sus);
+                    }
+                    if (selectedOccupationID == mp.locationProfileID) {
+                        investigatee.AdjustSusSlightly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has slightly raised to " + investigatee.sus);
+                    }
 
                     // if selected location contradicts what they know, increase sus greatly
+                    if (!investigatee.MatchesBelievedPlayerOccupation(selectedOccupationID)) {
+                        investigatee.AdjustSusGreatly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                    }
 
                     // Assign the the occupation
-
+                    investigatee.believedPlayerOccupationID = selectedOccupationID;
 
                     break;
+                // Error?
                 default:
                     break;
             }
