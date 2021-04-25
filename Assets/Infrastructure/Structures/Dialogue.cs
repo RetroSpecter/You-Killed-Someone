@@ -63,7 +63,7 @@ public class DialogueChoice {
     }
 
     public static DialogueChoice CreateAskOrTellChoice(Character beingTalkedto) {
-        StoryText talkOrTell = new StoryText("AskOrTell", "Will c:0 ask or tell c:1?", new List<Character> { CharacterLibrary.PLAYER , beingTalkedto });
+        StoryText talkOrTell = new StoryText("AskOrTell", "Will c:0 ask or tell c:1 ?", new List<Character> { CharacterLibrary.PLAYER , beingTalkedto });
         return new DialogueChoice(talkOrTell, DialogueChoiceOption.ASK, DialogueChoiceOption.TELL);
     }
 
@@ -304,8 +304,8 @@ public class StoryText {
     }
 
     public static StoryText YOU_KILLED_SOMEONE = new StoryText("killed",  "c:0 killed someone" , new List<Character> { CharacterLibrary.PLAYER });
-    public static StoryText YOU_KILLED_X_WITH_Y_AT_Z = new StoryText("killedXYZ", "You killed %s with %s" );
-    public static StoryText X_FINDS_THE_BODY = new StoryText("findBody", "%s finds the body" );
+    public static StoryText YOU_KILLED_X_WITH_Y_AT_Z = new StoryText("killedXYZ", "c:0 killed c:1 with w:0 s:0 ");
+    public static StoryText X_FINDS_THE_BODY = new StoryText("findBody", "c:0 found the body" );
 
     public static StoryText X_LIKES_Y = new StoryText("likes", "%s likes %s" );
     public static StoryText X_HATES_Y = new StoryText("hates", "%s hates %s" );
