@@ -282,6 +282,9 @@ public class GameController : MonoBehaviour {
                     // Assign the the weapon
                     investigatee.believedPlayerToolID = selectedWeaponID;
 
+                    // Register Question
+                    GameState.Instance.RegisterAskedQuestion(investigatee, questionType, weaponsQuestion.GetOptionID(recentlySelectedOption));
+
                     break;
                 // Asking about favorite place
                 case 1:
@@ -343,6 +346,9 @@ public class GameController : MonoBehaviour {
 
                     // Assign the the location
                     investigatee.believedPlayerLocationID = selectedLocationID;
+                    
+                    // Register Question
+                    GameState.Instance.RegisterAskedQuestion(investigatee, questionType, locationsQuestion.GetOptionID(recentlySelectedOption));
 
                     break;
                 // Asking about occupation
@@ -426,6 +432,9 @@ public class GameController : MonoBehaviour {
                     // Assign the the occupation
                     investigatee.believedPlayerOccupationID = selectedOccupationID;
 
+                    // Register Question
+                    GameState.Instance.RegisterAskedQuestion(investigatee, questionType, occupationsQuestion.GetOptionID(recentlySelectedOption));
+
                     break;
                 // Error?
                 default:
@@ -447,17 +456,21 @@ public class GameController : MonoBehaviour {
         // get a profile item Y that you told someone you like / are
         Character blamer;
         List<Character> allChars = GameState.Instance.GetAliveCharacters();
-        //yield return StartCoroutine(AdjustSusGreatly(allChars[2], true));
-        //yield return StartCoroutine(AdjustSusSlightly(allChars[4], false));
         allChars.Sort( (x, y) => { return y.sus - x.sus; });
-        //foreach(var c in allChars) {
-        //    Debug.Log(c.nickName + ": " + c.sus);
-        //}
+        blamer = allChars[Random.Range(0, allChars.Count / 2)];
+
+        AskedQuestion question = GameState.Instance.GetRandomQuestion();
+
 
 
         // Out of the blue, x addresses you in front of the group!
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+            "Out of the blue, c:0 addresses c:1 in front of the group!", new List<Character> { blamer, CharacterLibrary.PLAYER })));
 
-        // They ask "don't you like y?" 
+        // They ask "don't you like y?"
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+            "c:0 asks \"Hey, don't c:1 like ", new List<Character> { blamer, CharacterLibrary.PLAYER })));
+
         // Yes => everyone thinks you like this item
         // No => contradicts anyone who thought you did, greatly increases sus
 

@@ -8,6 +8,7 @@ public class GameState : MonoBehaviour {
     public static GameState Instance;
 
     public Dictionary<string, Character> characters;
+    public List<AskedQuestion> askedQuestions;
     private MurderProfile round1;
 
     //debug fields
@@ -15,6 +16,7 @@ public class GameState : MonoBehaviour {
 
     [SerializeField]
     public InspectorCharacter[] debugs;
+    // create a list of questions asked
 
 
     public void Awake() {
@@ -25,6 +27,7 @@ public class GameState : MonoBehaviour {
             CharacterLibrary.AssignAffinities(characters.Values.ToList());
             debugs = new InspectorCharacter[7];
 
+            askedQuestions = new List<AskedQuestion>();
         }
     }
 
@@ -40,8 +43,6 @@ public class GameState : MonoBehaviour {
                     bleg.characterID,
                     bleg.nickName,
                     bleg.profile.occupation,
-                    GetCharacter(bleg.loves).nickName,
-                    GetCharacter(bleg.hates).nickName,
                     bleg.sus,
                     bleg.believedPlayerOccupationID,
                     bleg.believedPlayerToolID,
@@ -58,6 +59,19 @@ public class GameState : MonoBehaviour {
         weapon = ProfileLibrary.GetWeapon(mp.weaponProfileID);
         location = ProfileLibrary.GetLocation(mp.locationProfileID);
         discoverer = mp.bodyDiscovererID;
+    }
+
+
+    // Takes in an asker, and answer, and the type of question it is:
+    //  0 = tool
+    //  1 = place
+    //  2 = occupation
+    public void RegisterAskedQuestion(Character asker, int type, string answerID) {
+        this.askedQuestions.Add(new AskedQuestion(asker.characterID, type, answerID));
+    }
+
+    public AskedQuestion GetRandomQuestion() {
+        return this.askedQuestions[Random.Range(0, this.askedQuestions.Count)];
     }
 
     public static Character GetCharacter(string characterID) {
@@ -120,8 +134,6 @@ public struct InspectorCharacter {
     public string characterID;
     public string characterNickName;
     public string occupation;
-    public string loves;
-    public string hates;
 
 
     public int sus;
@@ -130,12 +142,10 @@ public struct InspectorCharacter {
     public string believedPlayerLocationID;
 
     public InspectorCharacter(string id, string nickname, string occupation,
-        string loves, string hates, int sus, string bpo, string bpt, string bpl) {
+            int sus, string bpo, string bpt, string bpl) {
         this.characterID = id;
         this.characterNickName = nickname;
         this.occupation = occupation;
-        this.loves = loves;
-        this.hates = hates;
         this.sus = sus;
         this.believedPlayerOccupationID = bpo;
         this.believedPlayerToolID = bpt;
@@ -144,4 +154,21 @@ public struct InspectorCharacter {
 
 }
 
-// Create a murder profile
+public class AskedQuestion {
+    public string askerID;
+    private QuestionType type;
+    public string answerID;
+
+    public AskedQuestion(string askerID, int type, string answerID) {
+        this.askerID = askerID;
+        this.type = (QuestionType) type;
+        this.answerID = answerID;
+    }
+
+
+    private enum QuestionType {
+        tool,
+        place,
+        occupation
+    }
+}
