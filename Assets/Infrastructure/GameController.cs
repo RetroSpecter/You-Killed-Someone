@@ -38,13 +38,6 @@ public class GameController : MonoBehaviour {
         GameState.Instance.KillCharacter(whoYouKilled.GetOptionID(recentlySelectedOption));
         mp.murderedCharacterID = whoYouKilled.GetOptionID(recentlySelectedOption);
 
-        // Give Choice: where
-        DialogueChoice whereYouKilled = new DialogueChoice(DialogueChoice.MURDER_LOCATION, GameState.Instance.GetMurderLocations(true));
-        yield return StartCoroutine(vc.DisplayPrompt(whereYouKilled, SelectOption));
-        yield return null;
-
-        Debug.Log("Selected location: " + whereYouKilled.options[recentlySelectedOption]);
-        mp.locationProfileID = whereYouKilled.GetOptionID(recentlySelectedOption);
 
         // Give Choice: how
         DialogueChoice howYouKilled = new DialogueChoice(DialogueChoice.MURDER_WEAPON, GameState.Instance.GetMurderWeapons(true));
@@ -55,11 +48,34 @@ public class GameController : MonoBehaviour {
         Debug.Log("Selected option ID: " + howYouKilled.options[recentlySelectedOption].optionID);
         mp.weaponProfileID = howYouKilled.GetOptionID(recentlySelectedOption);
 
+
+        // Give Choice: where
+        DialogueChoice whereYouKilled = new DialogueChoice(DialogueChoice.MURDER_LOCATION, GameState.Instance.GetMurderLocations(true));
+        yield return StartCoroutine(vc.DisplayPrompt(whereYouKilled, SelectOption));
+        yield return null;
+
+        Debug.Log("Selected location: " + whereYouKilled.options[recentlySelectedOption]);
+        mp.locationProfileID = whereYouKilled.GetOptionID(recentlySelectedOption);
+
+
         // You murdered _ with _
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_X_WITH_Y_AT_Z, new List<Character>() { CharacterLibrary.PLAYER, mp.GetMurderedCharacter() }, new List<string>() { mp.GetMurderLocation() }, new List<string>() { mp.GetMurderWeapon() }, new TextSettings(1f, false, 2, true))));
 
-        var aliveCharacters = GameState.Instance.GetAliveCharacters();
-        mp.bodyDiscovererID = aliveCharacters[Random.Range(0, aliveCharacters.Count)].characterID;
+        //// Give Choice: did you discover it?
+        //DialogueChoice didYouDiscoverBody = new DialogueChoice(DialogueChoice.DISCOVER_BODY);
+        //yield return StartCoroutine(vc.DisplayPrompt(didYouDiscoverBody, SelectOption));
+        //Debug.Log("Did you discover the body: " + didYouDiscoverBody.options[recentlySelectedOption]);
+        // If you did, you are the discoverer. Otherwise, a random NPC is the discoverer
+        //if (didYouDiscoverBody.GetOptionID(recentlySelectedOption) == DialogueChoiceOption.YES.textID) {
+        //    mp.bodyDiscovererID = CharacterLibrary.PLAYER.characterID;
+        //} else {
+
+        // No choice to select who finds the body
+        {
+            var aliveCharacters = GameState.Instance.GetAliveCharacters();
+            mp.bodyDiscovererID = aliveCharacters[Random.Range(0, aliveCharacters.Count)].characterID;
+        }
+
         // Update game state
         GameState.Instance.RegisterMurderProfile(mp);
         yield return new WaitForSeconds(1);
@@ -214,12 +230,22 @@ public class GameController : MonoBehaviour {
                     // NPC Asks about if the player preferrs any of the above weapons
                     DialogueChoice weaponsQuestion = DialogueChoice.CreateAQuestion(investigatee, profiles);
                     yield return StartCoroutine(vc.DisplayPrompt(weaponsQuestion, SelectOption));
+                    string selectedWeaponID = weaponsQuestion.GetOptionID(recentlySelectedOption);
 
                     // If selected weapon is murder weapon, increase sus moderately
+                    if (selectedWeaponID == mp.weaponProfileID) {
+                        investigatee.AdjustSusModerately(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
+                    }
 
                     // if selected weapon contradicts what they know, increase sus greatly
+                    if (!investigatee.MatchesBelievedPlayerTool(selectedWeaponID)) {
+                        investigatee.AdjustSusGreatly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                    }
 
                     // Assign the the weapon
+                    investigatee.believedPlayerToolID = selectedWeaponID;
 
                     break;
                 // Asking about favorite place
@@ -248,12 +274,22 @@ public class GameController : MonoBehaviour {
                     // NPC Asks about if the player preferrs any of the above locations
                     DialogueChoice locationsQuestion = DialogueChoice.CreateAQuestion(investigatee, null, profiles);
                     yield return StartCoroutine(vc.DisplayPrompt(locationsQuestion, SelectOption));
+                    string selectedLocationID = locationsQuestion.GetOptionID(recentlySelectedOption);
 
                     // If selected location is murder location, increase sus moderately
+                    if (selectedLocationID == mp.locationProfileID) {
+                        investigatee.AdjustSusModerately(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
+                    }
 
                     // if selected location contradicts what they know, increase sus greatly
+                    if (!investigatee.MatchesBelievedPlayerLocation(selectedLocationID)) {
+                        investigatee.AdjustSusGreatly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                    }
 
                     // Assign the the location
+                    investigatee.believedPlayerLocationID = selectedLocationID;
 
                     break;
                 // Asking about occupation
@@ -271,15 +307,29 @@ public class GameController : MonoBehaviour {
                     // NPC Asks about if the player is any of the above occupations
                     DialogueChoice occupationsQuestion = DialogueChoice.CreateAQuestion(investigatee, null, profiles);
                     yield return StartCoroutine(vc.DisplayPrompt(occupationsQuestion, SelectOption));
+                    string selectedOccupationID = occupationsQuestion.GetOptionID(recentlySelectedOption);
 
                     // If the murder location and/or weapon belongs to the occupation, increase sus slightly
+                    if (selectedOccupationID == mp.weaponProfileID) {
+                        investigatee.AdjustSusSlightly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has slightly raised to " + investigatee.sus);
+                    }
+                    if (selectedOccupationID == mp.locationProfileID) {
+                        investigatee.AdjustSusSlightly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has slightly raised to " + investigatee.sus);
+                    }
 
                     // if selected location contradicts what they know, increase sus greatly
+                    if (!investigatee.MatchesBelievedPlayerOccupation(selectedOccupationID)) {
+                        investigatee.AdjustSusGreatly(true);
+                        Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                    }
 
                     // Assign the the occupation
-
+                    investigatee.believedPlayerOccupationID = selectedOccupationID;
 
                     break;
+                // Error?
                 default:
                     break;
             }
@@ -293,9 +343,9 @@ public class GameController : MonoBehaviour {
         c.AdjustSusSlightly(increase);
 
         if (increase)
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_AGREES, new List<Character> { c })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_DISAGREES , new List<Character> { c })));
         else
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_DISAGREES, new List<Character> { c })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_AGREES, new List<Character> { c })));
     }
 
     public IEnumerator AdjustSusModerately(Character c, bool increase)
@@ -303,9 +353,9 @@ public class GameController : MonoBehaviour {
         c.AdjustSusModerately(increase);
 
         if(increase)
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 nods reassuredly", new List<Character> { c })));
-        else
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 seems a bit suspicious", new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 nods reassuredly", new List<Character> { c })));
 
 
     }
@@ -314,9 +364,9 @@ public class GameController : MonoBehaviour {
     {
         c.AdjustSusGreatly(increase);
         if (increase)
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you completely", new List<Character> { c })));
-        else
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 doesn't believe a single word you said.", new List<Character> { c })));
+        else
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you completely", new List<Character> { c })));
 
     }
 

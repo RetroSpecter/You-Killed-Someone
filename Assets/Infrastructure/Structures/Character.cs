@@ -48,6 +48,10 @@ public class Character {
 
         this.alive = true;
         this.sus = 50;
+
+        believedPlayerOccupationID = "";
+        believedPlayerToolID = "";
+        believedPlayerLocationID = "";
     }
 
     // given a profileID, returns whether it is this character's profile

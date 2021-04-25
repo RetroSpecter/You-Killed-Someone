@@ -13,6 +13,9 @@ public class GameState : MonoBehaviour {
     //debug fields
     public string deadCharacter, weapon, location, discoverer;
 
+    [SerializeField]
+    public InspectorCharacter[] debugs;
+
 
     public void Awake() {
         if (Instance == null) {
@@ -20,6 +23,31 @@ public class GameState : MonoBehaviour {
             this.characters = CharacterLibrary.LoadCharacters();
             ProfileLibrary.AssignProfiles(this.characters.Values.ToList());
             CharacterLibrary.AssignAffinities(characters.Values.ToList());
+            debugs = new InspectorCharacter[7];
+
+        }
+    }
+
+
+    int updateClock = 0;
+    public void Update() {
+        updateClock++;
+        if (updateClock % 30 == 0) {
+            List<Character> blegs = characters.Values.ToList();
+            for (int i = 0; i < blegs.Count; i++) {
+                var bleg = blegs[i];
+                debugs[i] = new InspectorCharacter(
+                    bleg.characterID,
+                    bleg.nickName,
+                    bleg.profile.occupation,
+                    GetCharacter(bleg.loves).nickName,
+                    GetCharacter(bleg.hates).nickName,
+                    bleg.sus,
+                    bleg.believedPlayerOccupationID,
+                    bleg.believedPlayerToolID,
+                    bleg.believedPlayerLocationID
+                );
+            }
         }
     }
 
@@ -33,6 +61,9 @@ public class GameState : MonoBehaviour {
     }
 
     public static Character GetCharacter(string characterID) {
+        if (characterID == null || characterID == "")
+            return CharacterLibrary.PLAYER;
+
         return Instance.characters[characterID];
     }
 
@@ -83,5 +114,34 @@ public class GameState : MonoBehaviour {
     }
 }
 
+[System.Serializable]
+public struct InspectorCharacter {
+
+    public string characterID;
+    public string characterNickName;
+    public string occupation;
+    public string loves;
+    public string hates;
+
+
+    public int sus;
+    public string believedPlayerOccupationID;
+    public string believedPlayerToolID;
+    public string believedPlayerLocationID;
+
+    public InspectorCharacter(string id, string nickname, string occupation,
+        string loves, string hates, int sus, string bpo, string bpt, string bpl) {
+        this.characterID = id;
+        this.characterNickName = nickname;
+        this.occupation = occupation;
+        this.loves = loves;
+        this.hates = hates;
+        this.sus = sus;
+        this.believedPlayerOccupationID = bpo;
+        this.believedPlayerToolID = bpt;
+        this.believedPlayerLocationID = bpl;
+    }
+
+}
 
 // Create a murder profile
