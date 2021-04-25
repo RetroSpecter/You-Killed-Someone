@@ -38,6 +38,10 @@ public static class ProfileLibrary {
         return GetAllProfileMappings()[profileID].preferredLocation;
     }
 
+    public static string GetOpccupation(string profileID) {
+        return GetAllProfileMappings()[profileID].occupation;
+    }
+
     // Returns a list of 4 randomly selected profiles
     // If ensure living is true, then at least one of these profiles will match
     //  a currently alive character

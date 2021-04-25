@@ -165,6 +165,29 @@ public class AskedQuestion {
         this.answerID = answerID;
     }
 
+    public string GetAnswerText() {
+        if (type == QuestionType.tool) {
+            return ProfileLibrary.GetWeapon(answerID);
+        } else if (type == QuestionType.place) {
+            return ProfileLibrary.GetLocation(answerID);
+        } else {
+            return ProfileLibrary.GetOpccupation(answerID);
+        }
+    }
+
+
+    public int GetQuestionType () {
+        return (int) this.type;
+    }
+
+
+    public string GetEscapeKey() {
+        if (type == QuestionType.tool) {
+            return "w:";
+        } else {
+            return "s:";
+        }
+    }
 
     private enum QuestionType {
         tool,
