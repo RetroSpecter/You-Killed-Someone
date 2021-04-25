@@ -84,6 +84,7 @@ public class Character {
         } else {
             sus -= 25;
         }
+
     }
 
     public void AdjustSusModerately(bool increase) {

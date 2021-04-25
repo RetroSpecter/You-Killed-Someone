@@ -71,10 +71,10 @@ public class DialogueChoice {
         // You tell <character> that __ likes <string>
         StoryText tell;
         if (weaponText != "") {
-            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ likes w:2 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto },
+            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ likes w:0 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto },
                 null, new List<string> { weaponText });
         } else if (locationText != "") {
-            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ loves being s:2 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto },
+            tell = new StoryText("YouTell", "c:0 tell c:1 that ____ loves being s:0 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto },
                 new List<string> { locationText });
         } else {
             tell = new StoryText("YouTell", "c:0 tell c:1 that ____ hates c:2 .", new List<Character> { CharacterLibrary.PLAYER, beingTalkedto, affinity });
@@ -329,8 +329,8 @@ public class StoryText {
     public static StoryText TELL_X_ABOUT_SOMETHING = new StoryText("tell", "Tell %s something" );
     public static StoryText X_WILL_REMEMBER_THAT = new StoryText("remember", "%s will remember that" );
 
-    public static StoryText X_AGREES = new StoryText("agrees", "%s agrees" );
-    public static StoryText X_DISAGREES = new StoryText("disagrees",  "%s is not convinced" );
+    public static StoryText X_AGREES = new StoryText("agrees", "c:0  agrees");
+    public static StoryText X_DISAGREES = new StoryText("disagrees", "c:0 is not convinced");
 
     public static StoryText X_WANTS_TO_KNOW = new StoryText("questionWeapon", "%s wants to know " );
     public static StoryText X_WANTS_TO_KNOW_WEAPON = new StoryText("questionWeapon", "What weapon do you like?" );
