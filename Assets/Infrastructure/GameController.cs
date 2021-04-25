@@ -177,6 +177,9 @@ public class GameController : MonoBehaviour {
 
 
             // Investigatee wants to ask you a question
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone gathers s:0",
+                new List<Character> { investigatee, CharacterLibrary.PLAYER })));
+
             // Randomly select between:
             //  - Asking about preferred tools
             //  - Asking about favorite places
