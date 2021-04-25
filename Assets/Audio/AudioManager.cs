@@ -11,7 +11,6 @@ public class AudioManager : MonoBehaviour {
    [Range(0, 1), SerializeField] private float MusicVolume = 1;
 
    public AudioSource SFXSource;
-   public AudioSource MusicSource;
 
     public void Awake() {
         SoundEffectProfile.am = this;
@@ -47,14 +46,12 @@ public class AudioManager : MonoBehaviour {
     public void setMasterVolume(float volume) {
         MasterVolume = volume;
         PlayerPrefs.SetFloat("MasterVol", volume);
-        MusicSource.volume = getScaledMusicVolume();
     }
 
     public void setMusicVolume(float volume)
     {
         MusicVolume = volume;
         PlayerPrefs.SetFloat("MusicVolume", volume);
-        MusicSource.volume = getScaledMusicVolume();
     }
 
     public void setSFXVolume(float volume)

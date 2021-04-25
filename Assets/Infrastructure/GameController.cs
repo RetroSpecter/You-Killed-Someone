@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour {
     public IEnumerator Murder() {
         yield return null;
 
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(1, false, 0, true))));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(0.5f, false, 0, true))));
 
         MurderProfile mp = new MurderProfile();
 
@@ -60,7 +60,7 @@ public class GameController : MonoBehaviour {
 
 
         // You murdered _ with _
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_X_WITH_Y_AT_Z, new List<Character>() { CharacterLibrary.PLAYER, mp.GetMurderedCharacter() }, new List<string>() { mp.GetMurderLocation() }, new List<string>() { mp.GetMurderWeapon() }, new TextSettings(1f, false, 2, true))));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_X_WITH_Y_AT_Z, new List<Character>() { CharacterLibrary.PLAYER, mp.GetMurderedCharacter() }, new List<string>() { mp.GetMurderLocation() }, new List<string>() { mp.GetMurderWeapon() }, new TextSettings(0.15f, false, 2, true))));
 
         //// Give Choice: did you discover it?
         //DialogueChoice didYouDiscoverBody = new DialogueChoice(DialogueChoice.DISCOVER_BODY);
@@ -84,11 +84,9 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator Investigation() {
         var mp = GameState.Instance.GetMostRecentMurderProfile();
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_FINDS_THE_BODY, new List<Character>() { mp.GetBodyDiscoverer() })));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_FINDS_THE_BODY, new List<Character>() { mp.GetBodyDiscoverer() }, null, null, new TextSettings(0, false, 10, true))));
 
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone gathers s:0", null, new List<string> { mp.GetMurderLocation() })));
-
-
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "tension fills the atmopshere")));
 
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.THE_PLOT_THICKENS, null, null, null, new TextSettings(1.5f, false, 2, false))));
@@ -96,7 +94,7 @@ public class GameController : MonoBehaviour {
         int totalInvestigations = 3;
         for (int i = 0; i < totalInvestigations; i++) {
             // Everyone is muttering among themselves
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is cautiously eyeing each other")));
+            //yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is cautiously eyeing each other")));
 
             // Who will you talk to?
             DialogueChoice talkToSomeone = new DialogueChoice(DialogueChoice.WHO_TO_TALK_TO, GameState.Instance.GetCharacters());
@@ -116,6 +114,7 @@ public class GameController : MonoBehaviour {
                 yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They like to use w:0", null, null, new List<string> { investigatee.profile.preferredTool })));
                 yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "And they enjoy hanging out s:0", null, new List<string> { investigatee.profile.preferredLocation })));
 
+                investigatee.profileKnown = true;
                 //yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 really likes s:0", new List<Character> { investigatee }, new List<string> { investigatee.loves })));
                 //yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "and despises s:0", null, new List<string> { investigatee.hates })));
 
