@@ -188,6 +188,17 @@ public class GameController : MonoBehaviour {
             }
 
 
+
+            // QUESTION
+            // QUESTION
+            // QUESTION
+            // QUESTION
+            // QUESTION
+            // QUESTION
+            // QUESTION
+
+
+
             // Investigatee wants to ask you a question
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 wants to ask c:1 a question",
                 new List<Character> { investigatee, CharacterLibrary.PLAYER })));
@@ -234,18 +245,21 @@ public class GameController : MonoBehaviour {
                     string selectedWeaponID = weaponsQuestion.GetOptionID(recentlySelectedOption);
 
 
-                    // If selected weapon is murder weapon, increase sus moderately
-                    if (selectedWeaponID == mp.weaponProfileID) {
-                        //investigatee.AdjustSusModerately(true);
-                        moderate = true;
-                    }
-
+                    // TODO: Add custom messages for specific situations
                     // if selected weapon contradicts what they know, increase sus greatly
                     if (!investigatee.MatchesBelievedPlayerTool(selectedWeaponID)) {
                         //investigatee.AdjustSusGreatly(true);
                         greatly = true;
                     }
 
+                    // If selected weapon is murder weapon, increase sus moderately
+                    if (selectedWeaponID == mp.weaponProfileID) {
+                        //investigatee.AdjustSusModerately(true);
+                        moderate = true;
+                    }
+
+
+                    // TODO: DEPRICATE:
                     // If the investigatee's suspiciion rose
                     if (moderate && !greatly) {
                         yield return StartCoroutine(AdjustSusModerately(investigatee, true));
@@ -289,13 +303,9 @@ public class GameController : MonoBehaviour {
                     yield return StartCoroutine(vc.DisplayPrompt(locationsQuestion, SelectOption));
                     string selectedLocationID = locationsQuestion.GetOptionID(recentlySelectedOption);
 
-                    // If selected location is murder location, increase sus moderately
-                    if (selectedLocationID == mp.locationProfileID) {
-                        moderate = true;
-                        //investigatee.AdjustSusModerately(true);
-                        //Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
-                    }
 
+
+                    // TODO: Add custom messages for specific situations
                     // if selected location contradicts what they know, increase sus greatly
                     if (!investigatee.MatchesBelievedPlayerLocation(selectedLocationID)) {
                         greatly = true;
@@ -303,6 +313,14 @@ public class GameController : MonoBehaviour {
                         //Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
                     }
 
+                    // If selected location is murder location, increase sus moderately
+                    if (selectedLocationID == mp.locationProfileID) {
+                        moderate = true;
+                        //investigatee.AdjustSusModerately(true);
+                        //Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
+                    }
+
+                    // TODO: Depricate
                     // If the investigatee's suspiciion rose
                     if (moderate && !greatly) {
                         yield return StartCoroutine(AdjustSusModerately(investigatee, true));
@@ -334,6 +352,19 @@ public class GameController : MonoBehaviour {
                     yield return StartCoroutine(vc.DisplayPrompt(occupationsQuestion, SelectOption));
                     string selectedOccupationID = occupationsQuestion.GetOptionID(recentlySelectedOption);
 
+
+
+
+
+                    // TODO: Add custom messages for specific situations
+                    // if selected location contradicts what they know, increase sus greatly
+                    if (!investigatee.MatchesBelievedPlayerOccupation(selectedOccupationID)) {
+                        greatly = true;
+                        //investigatee.AdjustSusGreatly(true);
+                        //Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
+                    }
+
+
                     bool slightly1 = false, slightly2 = false;
                     // If the murder location and/or weapon belongs to the occupation, increase sus slightly
                     if (selectedOccupationID == mp.weaponProfileID) {
@@ -347,13 +378,10 @@ public class GameController : MonoBehaviour {
                         //Debug.Log(investigatee.nickName + "'s sus of the player has slightly raised to " + investigatee.sus);
                     }
 
-                    // if selected location contradicts what they know, increase sus greatly
-                    if (!investigatee.MatchesBelievedPlayerOccupation(selectedOccupationID)) {
-                        greatly = true;
-                        //investigatee.AdjustSusGreatly(true);
-                        //Debug.Log(investigatee.nickName + "'s sus of the player has greatly raised to " + investigatee.sus);
-                    }
+                    
 
+
+                    // TODO: Depricate
                     // If the investigatee's suspiciion rose
                     if (slightly1 ^ slightly2 && !greatly) {
                         yield return StartCoroutine(AdjustSusSlightly(investigatee, true));
