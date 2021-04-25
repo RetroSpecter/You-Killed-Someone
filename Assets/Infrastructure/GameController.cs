@@ -38,13 +38,6 @@ public class GameController : MonoBehaviour {
         GameState.Instance.KillCharacter(whoYouKilled.GetOptionID(recentlySelectedOption));
         mp.murderedCharacterID = whoYouKilled.GetOptionID(recentlySelectedOption);
 
-        // Give Choice: where
-        DialogueChoice whereYouKilled = new DialogueChoice(DialogueChoice.MURDER_LOCATION, GameState.Instance.GetMurderLocations(true));
-        yield return StartCoroutine(vc.DisplayPrompt(whereYouKilled, SelectOption));
-        yield return null;
-
-        Debug.Log("Selected location: " + whereYouKilled.options[recentlySelectedOption]);
-        mp.locationProfileID = whereYouKilled.GetOptionID(recentlySelectedOption);
 
         // Give Choice: how
         DialogueChoice howYouKilled = new DialogueChoice(DialogueChoice.MURDER_WEAPON, GameState.Instance.GetMurderWeapons(true));
@@ -55,17 +48,30 @@ public class GameController : MonoBehaviour {
         Debug.Log("Selected option ID: " + howYouKilled.options[recentlySelectedOption].optionID);
         mp.weaponProfileID = howYouKilled.GetOptionID(recentlySelectedOption);
 
+
+        // Give Choice: where
+        DialogueChoice whereYouKilled = new DialogueChoice(DialogueChoice.MURDER_LOCATION, GameState.Instance.GetMurderLocations(true));
+        yield return StartCoroutine(vc.DisplayPrompt(whereYouKilled, SelectOption));
+        yield return null;
+
+        Debug.Log("Selected location: " + whereYouKilled.options[recentlySelectedOption]);
+        mp.locationProfileID = whereYouKilled.GetOptionID(recentlySelectedOption);
+
+
         // You murdered _ with _
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_X_WITH_Y_AT_Z, new List<Character>() { CharacterLibrary.PLAYER, mp.GetMurderedCharacter() }, new List<string>() { mp.GetMurderLocation() }, new List<string>() { mp.GetMurderWeapon() })));
 
-        // Give Choice: did you discover it?
-        DialogueChoice didYouDiscoverBody = new DialogueChoice(DialogueChoice.DISCOVER_BODY);
-        yield return StartCoroutine(vc.DisplayPrompt(didYouDiscoverBody, SelectOption));
+        //// Give Choice: did you discover it?
+        //DialogueChoice didYouDiscoverBody = new DialogueChoice(DialogueChoice.DISCOVER_BODY);
+        //yield return StartCoroutine(vc.DisplayPrompt(didYouDiscoverBody, SelectOption));
         //Debug.Log("Did you discover the body: " + didYouDiscoverBody.options[recentlySelectedOption]);
         // If you did, you are the discoverer. Otherwise, a random NPC is the discoverer
-        if (didYouDiscoverBody.GetOptionID(recentlySelectedOption) == DialogueChoiceOption.YES.textID) {
-            mp.bodyDiscovererID = CharacterLibrary.PLAYER.characterID;
-        } else {
+        //if (didYouDiscoverBody.GetOptionID(recentlySelectedOption) == DialogueChoiceOption.YES.textID) {
+        //    mp.bodyDiscovererID = CharacterLibrary.PLAYER.characterID;
+        //} else {
+
+        // No choice to select who finds the body
+        {
             var aliveCharacters = GameState.Instance.GetAliveCharacters();
             mp.bodyDiscovererID = aliveCharacters[Random.Range(0, aliveCharacters.Count)].characterID;
         }
