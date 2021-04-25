@@ -43,6 +43,11 @@ public class GameState : MonoBehaviour {
         ));
     }
 
+    public List<Character> GetCharacters()
+    {
+        return new List<Character>(this.characters.Values);
+    }
+
     public HashSet<string> GetAliveProfileID() {
         return new HashSet<string>(this.GetAliveCharacters().Select(
             character => { return character.profile.profileID; }

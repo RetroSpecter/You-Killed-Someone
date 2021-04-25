@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
         MurderProfile mp = new MurderProfile();
 
         // Give Choice: Who
-        DialogueChoice whoYouKilled = new DialogueChoice(DialogueChoice.WHO_YOU_KILLED, GameState.Instance.GetAliveCharacters());
+        DialogueChoice whoYouKilled = new DialogueChoice(DialogueChoice.WHO_YOU_KILLED, GameState.Instance.GetCharacters());
         yield return StartCoroutine(vc.DisplayPrompt(whoYouKilled, SelectOption));
         yield return null;
 
@@ -90,7 +90,7 @@ public class GameController : MonoBehaviour {
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is cautiously eyeing each other")));
 
             // Who will you talk to?
-            DialogueChoice talkToSomeone = new DialogueChoice(DialogueChoice.WHO_TO_TALK_TO, GameState.Instance.GetAliveCharacters());
+            DialogueChoice talkToSomeone = new DialogueChoice(DialogueChoice.WHO_TO_TALK_TO, GameState.Instance.GetCharacters());
             yield return StartCoroutine(vc.DisplayPrompt(talkToSomeone, SelectOption));
             Character investigatee = GameState.GetCharacter(talkToSomeone.GetOptionID(recentlySelectedOption));
 

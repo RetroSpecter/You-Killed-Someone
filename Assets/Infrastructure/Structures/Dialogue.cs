@@ -57,7 +57,11 @@ public class DialogueChoice {
         // Turn each character into a dialogue choice
         this.options = new List<DialogueChoiceOption>(characters.Select<Character, DialogueChoiceOption>(
             character => {
-                return new DialogueChoiceOption(character.characterID, new StoryText("c:0", "c:0", new List<Character>() { character }));
+                bool strikethrough = !character.alive;
+
+                TextSettings ts = new TextSettings(1, strikethrough, 0);
+
+                return new DialogueChoiceOption(character.characterID, new StoryText("c:0", "c:0", new List<Character>() { character }, null, null, ts));
             }
         ));
     }
@@ -137,7 +141,7 @@ public class DialogueChoiceOption {
 
     public static StoryText WEAPON = new StoryText("weapon", "w:0" );
     public static StoryText SCENERY = new StoryText("scenery", "s:0" );
-    public static StoryText CHARACTER = new StoryText("weapon", "c:0" );
+    public static StoryText CHARACTER = new StoryText("character", "c:0" );
 
     public DialogueChoiceOption(string optionID, StoryText text)
     {
@@ -234,22 +238,26 @@ public class StoryText {
     public List<string> scenery;
     public List<string> weapons;
 
-    public StoryText(StoryText storyText, List<Character> characters = null, List<string> scenery = null, List<string> weapon = null) {
+    public TextSettings settings;
+
+    public StoryText(StoryText storyText, List<Character> characters = null, List<string> scenery = null, List<string> weapon = null, TextSettings ts = null) {
         this.textID = storyText.textID;
         this.text = storyText.text;
 
         this.characters = characters;
         this.scenery = scenery;
         this.weapons = weapon;
+        settings = ts;
     }
 
-    public StoryText(string textID, string text, List<Character> characters = null, List<string> scenery = null, List<string> weapon = null) {
+    public StoryText(string textID, string text, List<Character> characters = null, List<string> scenery = null, List<string> weapon = null, TextSettings ts = null) {
         this.textID = textID;
         this.text = text;
 
         this.characters = characters;
         this.scenery = scenery;
         this.weapons = weapon;
+        settings = ts;
     }
 
     public string ProcessText() {
