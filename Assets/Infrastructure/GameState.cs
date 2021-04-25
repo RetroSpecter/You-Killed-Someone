@@ -71,6 +71,10 @@ public class GameState : MonoBehaviour {
     public Character GetMostRecentlyKilled() {
         return this.round1.GetMurderedCharacter();
     }
+
+    public MurderProfile GetMostRecentMurderProfile() {
+        return this.round1;
+    }
 }
 
 

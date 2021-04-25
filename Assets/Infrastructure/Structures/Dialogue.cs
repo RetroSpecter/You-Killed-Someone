@@ -67,6 +67,12 @@ public class DialogueChoice {
         return new DialogueChoice(talkOrTell, DialogueChoiceOption.ASK, DialogueChoiceOption.TELL);
     }
 
+    public static DialogueChoice CreateYouTellChoice(Character beingTalkedto, string thingText) {
+        // You tell <character> that __ likes <string>
+        StoryText tell = new StoryText("YouTell", "c:0 tell c:1 that ____ likes " + thingText, new List<Character> { CharacterLibrary.PLAYER, beingTalkedto });
+        return new DialogueChoice(tell, GameState.Instance.GetAliveCharacters());
+    }
+
 
     public bool isYesNo() {
         return this.type == DialogueChoiceType.yesNo;

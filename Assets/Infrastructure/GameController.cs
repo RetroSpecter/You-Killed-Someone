@@ -65,9 +65,11 @@ public class GameController : MonoBehaviour {
     }
 
     public IEnumerator Investigation() {
+        var mp = GameState.Instance.GetMostRecentMurderProfile();
+
         // Someone announces a murder occurred
-            // if you, then: you yell for everyone to come
-            // if someone else, then: they yell for everyone to come
+        // if you, then: you yell for everyone to come
+        // if someone else, then: they yell for everyone to come
 
         // Everyone gathers around.
 
@@ -101,10 +103,25 @@ public class GameController : MonoBehaviour {
                 //  - Talking about murder weapon
                 //  - Talking about location
                 //  - talking about afinity
-                    
+                int topic = Random.Range(0, 3);
+                string topicText;
+                switch (topic) {
+                    // Talk about murder weapon
+                    case 0:
+                        topicText = ProfileLibrary.GetWeapon(mp.weaponProfileID);
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                }
+
 
                 // Who will you say?
                 // Choose a character
+                DialogueChoice tell = DialogueChoice.CreateYouTellChoice(investigatee, "");
+                yield return StartCoroutine(vc.DisplayPrompt(tell, SelectOption));
+
 
                 // Result: <Character> likes <murder weapon>
                 // Result: <Character> likes <location>
