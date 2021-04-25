@@ -81,13 +81,16 @@ public static class ProfileLibrary {
     // Returns a list of all provi =
     private static List<Profile> GetAllProfiles() {
         return new List<Profile> {
-            new Profile("scb", "Space Cowboy", "laser guns", "on the moon"),
             new Profile("chef", "5 Star Chef", "knives", "in the kitchen"),
             new Profile("phot", "Professional Photographer", "a camera", "outside"),
+            new Profile("plantboi", "Gardener", "a rusty hoe", "in the greenhouse"),
+            new Profile("doc", "Nurse", "a stethoscope", "by the medical cabinet"),
+            new Profile("butmaid", "Butler", "candle sticks", "in the dining room"),
+            new Profile("scholar", "Scholar", "heavy books", "in the library"),
+            new Profile("noble", "Noble", "silver spoon", "in the bedroom"),
+            new Profile("scb", "Space Cowboy", "laser guns", "on the moon"),
             new Profile("zoo", "Part Time Zoo Keeper", "trained elephants", "at the circus"),
-            new Profile("plantboi", "Gardener", "a rusty hoe", "in the garden"),
-            new Profile("doc", "Doctor", "a stethoscope", "at the hospital"),
-            new Profile("asas", "Assasin", "poison", "in a dark allyway")
+            new Profile("cthulhu", "Cthulhu", "existential dread", "in the depths of △◦❖╠▒▝╦")
         };
     }
 
