@@ -13,6 +13,7 @@ public class Character {
 
     // Text
     public string hexColor;
+    public bool profileKnown;
 
 
     // PROFILE FIELDS
