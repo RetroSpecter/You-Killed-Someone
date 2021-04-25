@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour {
     public IEnumerator Murder() {
         yield return null;
 
-        yield return StartCoroutine(vc.DisplayStoryText(StoryText.YOU_KILLED_SOMEONE));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(1, false, 0, true))));
 
         MurderProfile mp = new MurderProfile();
 
@@ -59,7 +59,7 @@ public class GameController : MonoBehaviour {
 
 
         // You murdered _ with _
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_X_WITH_Y_AT_Z, new List<Character>() { CharacterLibrary.PLAYER, mp.GetMurderedCharacter() }, new List<string>() { mp.GetMurderLocation() }, new List<string>() { mp.GetMurderWeapon() })));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_X_WITH_Y_AT_Z, new List<Character>() { CharacterLibrary.PLAYER, mp.GetMurderedCharacter() }, new List<string>() { mp.GetMurderLocation() }, new List<string>() { mp.GetMurderWeapon() }, new TextSettings(1f, false, 2, true))));
 
         //// Give Choice: did you discover it?
         //DialogueChoice didYouDiscoverBody = new DialogueChoice(DialogueChoice.DISCOVER_BODY);
@@ -76,9 +76,9 @@ public class GameController : MonoBehaviour {
             mp.bodyDiscovererID = aliveCharacters[Random.Range(0, aliveCharacters.Count)].characterID;
         }
 
-
         // Update game state
         GameState.Instance.RegisterMurderProfile(mp);
+        yield return new WaitForSeconds(1);
     }
 
     public IEnumerator Investigation() {
@@ -86,9 +86,11 @@ public class GameController : MonoBehaviour {
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_FINDS_THE_BODY, new List<Character>() { mp.GetBodyDiscoverer() })));
 
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone gathers s:0", null, new List<string> { mp.GetMurderLocation() })));
+
+
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "tension fills the atmopshere")));
 
-        yield return StartCoroutine(vc.DisplayStoryText(StoryText.THE_PLOT_THICKENS));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.THE_PLOT_THICKENS, null, null, null, new TextSettings(1.5f, false, 2, false))));
 
         int totalInvestigations = 3;
         for (int i = 0; i < totalInvestigations; i++) {

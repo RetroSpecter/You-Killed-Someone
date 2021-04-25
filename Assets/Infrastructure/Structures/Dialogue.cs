@@ -58,8 +58,9 @@ public class DialogueChoice {
         this.options = new List<DialogueChoiceOption>(characters.Select<Character, DialogueChoiceOption>(
             character => {
                 bool strikethrough = !character.alive;
+                float susShake = Mathf.Lerp(1, 5, (character.sus-25)/75);
 
-                TextSettings ts = new TextSettings(1, strikethrough, 0);
+                TextSettings ts = new TextSettings(1, strikethrough, susShake, false);
 
                 return new DialogueChoiceOption(character.characterID, new StoryText("c:0", "c:0", new List<Character>() { character }, null, null, ts));
             }
@@ -277,7 +278,7 @@ public class StoryText {
     public List<string> scenery;
     public List<string> weapons;
 
-    public TextSettings settings;
+    public TextSettings settings = TextSettings.DEFAULT;
 
     public StoryText(StoryText storyText, List<Character> characters = null, List<string> scenery = null, List<string> weapon = null, TextSettings ts = null) {
         this.textID = storyText.textID;
@@ -286,7 +287,9 @@ public class StoryText {
         this.characters = characters;
         this.scenery = scenery;
         this.weapons = weapon;
-        settings = ts;
+
+        if(ts != null)
+            settings = ts;
     }
 
     public StoryText(string textID, string text, List<Character> characters = null, List<string> scenery = null, List<string> weapon = null, TextSettings ts = null) {
@@ -296,7 +299,9 @@ public class StoryText {
         this.characters = characters;
         this.scenery = scenery;
         this.weapons = weapon;
-        settings = ts;
+
+        if (ts != null)
+            settings = ts;
     }
 
     public string ProcessText() {
