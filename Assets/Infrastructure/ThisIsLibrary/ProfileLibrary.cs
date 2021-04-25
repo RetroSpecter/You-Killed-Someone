@@ -35,11 +35,15 @@ public static class ProfileLibrary {
         return GetAllProfileMappings()[profileID].preferredLocation;
     }
 
-    // Returns a list of 4 randomly selected profiles 
-    public static List<Profile> GetFourProfiles() {
+    // Returns a list of 4 randomly selected profiles
+    // If ensure living is true, then at least one of these profiles will match
+    //  a currently alive character
+    public static List<Profile> GetFourProfiles(bool ensureLiving = false) {
         List<Profile> allProfiles = GetAllProfiles();
         List<Profile> selectedProfiles = new List<Profile>();
+        HashSet<string> livingProfiles = GameState.Instance.GetAliveProfileID();
 
+        bool matchesLiving = false;
         for (int i = 0; i < 4; i++) {
             int r = Random.Range(0, allProfiles.Count);
             var randomProfile = allProfiles[r];
@@ -47,6 +51,24 @@ public static class ProfileLibrary {
             // assign a random profile to a character and remove that profile
             selectedProfiles.Add(randomProfile);
             allProfiles.RemoveAt(r);
+
+            matchesLiving |= (livingProfiles.Contains(randomProfile.profileID));
+        }
+
+        if (ensureLiving) {
+            // Keep pulling profiles until you get one that is living
+            while (!matchesLiving) {
+                selectedProfiles.RemoveAt(0);
+
+                int r = Random.Range(0, allProfiles.Count);
+                var randomProfile = allProfiles[r];
+
+                // assign a random profile to a character and remove that profile
+                selectedProfiles.Add(randomProfile);
+                allProfiles.RemoveAt(r);
+
+                matchesLiving |= (livingProfiles.Contains(randomProfile.profileID));
+            }
         }
 
         return selectedProfiles;

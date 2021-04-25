@@ -12,6 +12,8 @@ public class Character {
     public string nickName;
 
     public const string playerID = "player";
+
+
     // Text
     public string hexColor;
 
@@ -27,11 +29,17 @@ public class Character {
 
     // STATE FIELDS
 
+    public bool alive;
     // A value from 0 - 100 (not bound)
     // Higher = worse
     // Lower = better
     public int sus;
-    public bool alive;
+
+    // Each of these are a profileID of the associated field
+    public string believedPlayerOccupationID;
+    public string believedPlayerToolID;
+    public string believedPlayerLocationID;
+
 
 
 
@@ -44,7 +52,51 @@ public class Character {
         this.alive = true;
     }
 
+    // given a profileID, returns whether that is this character's profile
+    public bool MatchesCharacterProfile(string profileID) {
+        return this.profile.profileID == profileID;
+    }
 
+    // Given a profileID, returns whether this lines up with what this character 
+    //  thinks the player's occupation is
+    public bool MatchesBelievedPlayerOccupation(string profileID) {
+        return this.believedPlayerOccupationID == ""
+            || this.believedPlayerOccupationID == profileID;
+    }
+
+    // Given a profileID, returns whether this lines up with what this character
+    //  thinks the player's occupation is
+    public bool MatchesBelievedPlayerTool(string profileID) {
+        return this.believedPlayerToolID == ""
+            || this.believedPlayerToolID == profileID;
+    }
+
+    // Given a profileID, returns whether this lines up with what this character 
+    //  thinks the player's occupation is
+    public bool MatchesBelievedPlayerLocation(string profileID) {
+        return this.believedPlayerLocationID == ""
+            || this.believedPlayerLocationID == profileID;
+    }
+
+
+
+    public void AdjustSusSlightly(bool increase) {
+        if (increase) {
+            sus += 25;
+        }
+    }
+
+    public void AdjustSusModerately(bool increase) {
+        if (increase) {
+            sus += 50;
+        }
+    }
+    
+    public void AdjustSusGreatly(bool increase) {
+        if (increase) {
+            sus += 75;
+        }
+    }
 }
 
 
