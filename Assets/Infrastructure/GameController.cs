@@ -533,6 +533,8 @@ public class GameController : MonoBehaviour {
 
 
         // You blame <blank>
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+            "c:0 tell everyone that c:1 killed c:2", new List<Character> { CharacterLibrary.PLAYER, characterBlamed, GameState.Instance.GetMostRecentlyKilled() })));
 
 
         // People's reactions
@@ -564,21 +566,57 @@ public class GameController : MonoBehaviour {
 
         // Calculation
 
-        // If people confirm:
-        // The group believes you.
-        // <blank> goodbye
-        // Onto next round
-        // Else:
-        // The group does not believe you. They think you did it.
-        // This is the end.
-        // <you> goodbye
-        // Game over. Restart?
-        // Yes -> restart
-        // No -> quit
+        int failureSusLevel = 100;
+        int numCharsTooSus = 0;
+        foreach (var c in GameState.Instance.GetAliveCharacters()) {
+            if (c.sus >= failureSusLevel)
+                numCharsTooSus++;
+        }
+
+        bool failure = numCharsTooSus >= GameState.Instance.GetAliveCharacters().Count / 2;
+
+        if (failure) {
+            // The group does not believe you. They think you did it.
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+                "But nobody believes c:0 - they have seen through the lies and turn on c:0", new List<Character> { CharacterLibrary.PLAYER })));
+
+            yield return StartCoroutine(vc.DisplayStoryText(GetRandomExecutionText(CharacterLibrary.PLAYER)));
+
+            // GAME OVER!!!
+            yield return StartCoroutine(vc.DisplayPrompt(new DialogueChoice(DialogueChoice.GAME_OVER), SelectOption));
+            // Yes -> restart
+            // No -> quit
+        } else {
+            // The group believes you.
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+                "The group believes what c:0 say and turn on c:1", new List<Character> { CharacterLibrary.PLAYER, characterBlamed })));
+
+
+            // <blank> goodbye
+            yield return StartCoroutine(vc.DisplayStoryText(GetRandomExecutionText(characterBlamed)));
+
+
+            // Ask if they want to kill again
+            yield return StartCoroutine(vc.DisplayPrompt(new DialogueChoice(DialogueChoice.VICTORY), SelectOption));
+
+            // Yes -> next round
+            // No -> quit
+        }
+
 
 
         yield return null;
     }
+
+
+    public StoryText GetRandomExecutionText(Character dead) {
+        List<StoryText> executionTexts = new List<StoryText> {
+            new StoryText("", "c:0 will be sleeping with the fishes tonight", new List<Character> { dead })
+        };
+
+        return executionTexts[Random.Range(0, executionTexts.Count)];
+    }
+
 
     public IEnumerator AdjustSusSlightly(Character c, bool increase)
     {
