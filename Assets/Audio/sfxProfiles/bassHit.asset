@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 338fe464d2fb3c747bcddbe394bb75fb, type: 3}
-  m_Name: new SoundEffectProfile
+  m_Name: bassHit
   m_EditorClassIdentifier: 
-  audioClips: []
-  volume: 1
-  pitchRange: {x: 1, y: 1}
+  audioClips:
+  - {fileID: 8300000, guid: 3785b395534e01544a4ac43609b61875, type: 3}
+  volume: 0.2
+  pitchRange: {x: 0.4, y: 0.5}

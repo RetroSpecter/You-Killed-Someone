@@ -15,4 +15,4 @@ MonoBehaviour:
   audioClips:
   - {fileID: 8300000, guid: 152f9c25e183a9d4692485d83c56aaff, type: 3}
   volume: 0.5
-  pitchRange: {x: 0.4, y: 0.6}
+  pitchRange: {x: 0.4, y: 0.5}

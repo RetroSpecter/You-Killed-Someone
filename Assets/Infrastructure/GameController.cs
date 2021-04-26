@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour {
         yield return StartCoroutine(Investigation());
         yield return StartCoroutine(Trial());
         // Round 1 Over
+        yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the first murder", new List<Character> { CharacterLibrary.PLAYER })));
         GameState.Instance.currentRound++;
 
@@ -40,6 +41,7 @@ public class GameController : MonoBehaviour {
         yield return StartCoroutine(Investigation());
         yield return StartCoroutine(Trial());
         // Round 2 over
+        yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the second murder", new List<Character> { CharacterLibrary.PLAYER })));
         GameState.Instance.currentRound++;
 
@@ -319,6 +321,8 @@ public class GameController : MonoBehaviour {
 
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 squints their eyes suspciously.", new List<Character> { investigatee })));
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They glance at the w:0 sticking out of c:0 's back", new List<Character> { mp.GetMurderedCharacter() }, null, new List<string> { mp.GetMurderWeapon() })));
+                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0", new List<Character> { mp.GetMurderedCharacter() }, null, new List<string> { mp.GetMurderWeapon() })));
+
                     }
 
                     // if selected weapon contradicts what they know, increase sus greatly
@@ -489,6 +493,7 @@ public class GameController : MonoBehaviour {
                             investigatee.AdjustSusSlightly(true);
                             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is slightly more suspicious.", new List<Character> { investigatee })));
                         }
+                        
                         else if (slightly1 && slightly2) {
                             investigatee.AdjustSusModerately(true);
                             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is slightly suspicious.", new List<Character> { investigatee })));
