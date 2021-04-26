@@ -22,8 +22,7 @@ public class DialogueChoice {
 
     public static StoryText WHO_TO_TALK_TO = new StoryText("talkToWhom", "Who will c:0 talk to?", new List<Character> { CharacterLibrary.PLAYER });
 
-    public static StoryText GAME_OVER = new StoryText("gameover", "GAME OVER. Try again?");
-    public static StoryText VICTORY = new StoryText("victory", "c:0 got away with murder. Do it again?", new List<Character> { CharacterLibrary.PLAYER });
+    public static StoryText GAME_OVER = new StoryText("gameover", "GAME OVER. Press NEXT to try again, or ESC to quite");
 
     // Yes No constructor
     public DialogueChoice(StoryText prompt) {

@@ -9,7 +9,8 @@ public class GameState : MonoBehaviour {
 
     public Dictionary<string, Character> characters;
     public List<AskedQuestion> askedQuestions;
-    private MurderProfile round1;
+    private MurderProfile[] rounds;
+    public int currentRound;
 
     //debug fields
     public string deadCharacter, weapon, location, discoverer;
@@ -26,6 +27,8 @@ public class GameState : MonoBehaviour {
             ProfileLibrary.AssignProfiles(this.characters.Values.ToList());
             CharacterLibrary.AssignAffinities(characters.Values.ToList());
             debugs = new InspectorCharacter[7];
+            this.rounds = new MurderProfile[3];
+            this.currentRound = 0;
 
             askedQuestions = new List<AskedQuestion>();
         }
@@ -54,7 +57,7 @@ public class GameState : MonoBehaviour {
 
 
     public void RegisterMurderProfile(MurderProfile mp) {
-        this.round1 = mp;
+        this.rounds[this.currentRound] = mp;
         deadCharacter = mp.murderedCharacterID;
         weapon = ProfileLibrary.GetWeapon(mp.weaponProfileID);
         location = ProfileLibrary.GetLocation(mp.locationProfileID);
@@ -120,11 +123,11 @@ public class GameState : MonoBehaviour {
     }
 
     public Character GetMostRecentlyKilled() {
-        return this.round1.GetMurderedCharacter();
+        return this.rounds[this.currentRound].GetMurderedCharacter();
     }
 
     public MurderProfile GetMostRecentMurderProfile() {
-        return this.round1;
+        return this.rounds[this.currentRound];
     }
 }
 
