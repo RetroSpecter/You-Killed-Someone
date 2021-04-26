@@ -600,22 +600,26 @@ public class GameController : MonoBehaviour {
                     c.believedPlayerOccupationID = playerAnswer;
                 }
             }
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks this.")));
         } else {
             // Check if any character thought you did, greatly increase their sus and remove
             foreach(var c in GameState.Instance.GetAliveCharacters()) {
                 if (questionType == 0 && c.believedPlayerToolID == playerAnswer) {
+                    Debug.Log(c.nickName + " thought you liked that weapon");
                     yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerToolID = "";
                 } else if (questionType == 1 && c.believedPlayerLocationID == playerAnswer) {
+                    Debug.Log(c.nickName + " thought you liked that location");
                     yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerLocationID = "";
                 } else if (questionType == 2 && c.believedPlayerOccupationID == playerAnswer) {
+                    Debug.Log(c.nickName + " thought you were that occupation");
                     yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerOccupationID = "";
                 }
             }
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Nobody thinks this anymore.")));
         }
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks this.")));
 
         yield return new WaitForSeconds(0.5f);
 
