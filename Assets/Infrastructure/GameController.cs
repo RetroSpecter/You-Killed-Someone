@@ -642,7 +642,7 @@ public class GameController : MonoBehaviour {
             }
 
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone thinks that makes sense, given c:0 likes hanging out s:0",
-                new List<Character> { characterBlamed }, new List<string> { ProfileLibrary.GetWeapon(mp.locationProfileID) })));
+                new List<Character> { characterBlamed }, new List<string> { ProfileLibrary.GetLocation(mp.locationProfileID) })));
         }
         else if (characterBlamed.profile.profileID == mp.weaponProfileID && characterBlamed.profile.profileID == mp.locationProfileID)
         {
