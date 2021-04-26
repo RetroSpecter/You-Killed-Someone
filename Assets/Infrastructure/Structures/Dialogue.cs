@@ -70,7 +70,7 @@ public class DialogueChoice {
     }
 
     public static DialogueChoice CreateAskOrTellChoice(Character beingTalkedto) {
-        StoryText talkOrTell = new StoryText("AskOrTell", "Will c:0 ask or tell c:1 ?", new List<Character> { CharacterLibrary.PLAYER , beingTalkedto });
+        StoryText talkOrTell = new StoryText("AskOrTell", "What do c:0 walk about with c:1 ?", new List<Character> { CharacterLibrary.PLAYER , beingTalkedto });
         return new DialogueChoice(talkOrTell, DialogueChoiceOption.ASK, DialogueChoiceOption.TELL);
     }
 

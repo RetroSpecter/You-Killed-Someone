@@ -135,7 +135,7 @@ public class GameController : MonoBehaviour {
 
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone gathers s:0", null, new List<string> { mp.GetMurderLocation() })));
         //yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "tension fills the atmopshere")));
-
+        yield return new WaitForSeconds(1.5f);
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "NO ONE MUST KNOW", null, null, null, new TextSettings(0, false, 5, true))));
 
         yield return new WaitForSeconds(1f);
@@ -557,6 +557,7 @@ public class GameController : MonoBehaviour {
                 }
             }
         }
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now knows this.")));
 
 
         // Tensions rise even higher as you fall deeper and deeper into your lies
