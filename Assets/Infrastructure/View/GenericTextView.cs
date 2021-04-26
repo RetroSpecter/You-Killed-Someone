@@ -76,8 +76,13 @@ public class GenericTextView : MonoBehaviour
         {
             var timeOffset = Mathf.Lerp(0, 1, i / (float)(textMeshPro.text.Length + 1));
             var charSequence = DOTween.Sequence();
-            charSequence.AppendCallback(() => textBlip?.Play())
-                .Join(_tweener.DOColor(i, ColorMapping[i], 0.01f))
+
+            if ((i % 2 == 0 && textMeshPro.text.Length < 20) || i % 4 == 0)
+            {
+                charSequence.AppendCallback(() => textBlip?.Play());
+            }
+
+            charSequence.Join(_tweener.DOColor(i, ColorMapping[i], 0.01f))
                 .Join(_tweener.DOScale(i, 0, 0.01f).From());
             sequence.Insert(timeOffset * text.settings.speed, charSequence);
         }
