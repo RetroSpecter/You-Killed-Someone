@@ -58,6 +58,11 @@ public class GameController : MonoBehaviour {
         // Round 3 over
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the third murder", new List<Character> { CharacterLibrary.PLAYER })));
 
+
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "As much as you resist, your bloodlust gets the best of you again.")));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(0.5f, false, 0, true))));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 didn't see it coming", new List<Character> { GameState.Instance.GetAliveCharacters()[0] })));
+
         // You won the game
         yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "There is no one left")));
