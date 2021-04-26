@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
@@ -17,24 +18,61 @@ public class GameController : MonoBehaviour {
     }
 
     public IEnumerator PlayGame() {
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(0.5f, false, 0, true))));
+
+        // ROUND 1
+        yield return StartCoroutine(Murder());
+        yield return StartCoroutine(Investigation());
+        yield return StartCoroutine(Trial());
+        // Round 1 Over
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the first murder", new List<Character> { CharacterLibrary.PLAYER })));
+        GameState.Instance.currentRound++;
+
+        // Preface Round 2
+        yield return new WaitForSeconds(0.5f);
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "As much as you resist, your bloodlust gets the best of you again.")));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(0.5f, false, 0, true))));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "However, everyone will remember what c:0 told them before.", new List<Character> { CharacterLibrary.PLAYER })));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Don't dig yourself too deep")));
+
+        // ROUND 2
+        yield return StartCoroutine(Murder());
+        yield return StartCoroutine(Investigation());
+        yield return StartCoroutine(Trial());
+        // Round 2 over
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the second murder", new List<Character> { CharacterLibrary.PLAYER })));
+        GameState.Instance.currentRound++;
+
+        // Preface round 3
+        yield return new WaitForSeconds(0.5f);
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "As much as you resist, your bloodlust gets the best of you again.")));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(0.5f, false, 0, true))));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "However, everyone still remembers what c:0 told them before.", new List<Character> { CharacterLibrary.PLAYER })));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Don't dig yourself too deep")));
+
+        // ROUND 3
         yield return StartCoroutine(Murder());
         yield return StartCoroutine(Investigation());
         yield return StartCoroutine(Trial());
 
-        // temp stuff
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "No one has pieced it together. You are in the clear.")));
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "However, people will remember what you told them.")));
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Don't dig yourself too deep")));
+        // Round 3 over
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the third murder", new List<Character> { CharacterLibrary.PLAYER })));
+
+        // You won the game
+        yield return new WaitForSeconds(0.5f);
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "There is no one left")));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is dead")));
 
         yield return new WaitForSeconds(0.5f);
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "As much as you resist, your bloodlust gets the best of you.")));
-        yield return StartCoroutine(Murder());
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Do it again?")));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Restarting the game...")));
+
+        // reload scene
+        SceneManager.LoadScene(0);
     }
 
     public IEnumerator Murder() {
         yield return null;
-
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(0.5f, false, 0, true))));
 
         MurderProfile mp = new MurderProfile();
 
@@ -583,9 +621,11 @@ public class GameController : MonoBehaviour {
             yield return StartCoroutine(vc.DisplayStoryText(GetRandomExecutionText(CharacterLibrary.PLAYER)));
 
             // GAME OVER!!!
-            yield return StartCoroutine(vc.DisplayPrompt(new DialogueChoice(DialogueChoice.GAME_OVER), SelectOption));
-            // Yes -> restart
-            // No -> quit
+            yield return StartCoroutine(vc.DisplayStoryText(DialogueChoice.GAME_OVER));
+
+            // reload scene
+            SceneManager.LoadScene(0);
+
         } else {
             // The group believes you.
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
@@ -594,13 +634,6 @@ public class GameController : MonoBehaviour {
 
             // <blank> goodbye
             yield return StartCoroutine(vc.DisplayStoryText(GetRandomExecutionText(characterBlamed)));
-
-
-            // Ask if they want to kill again
-            yield return StartCoroutine(vc.DisplayPrompt(new DialogueChoice(DialogueChoice.VICTORY), SelectOption));
-
-            // Yes -> next round
-            // No -> quit
         }
 
 
