@@ -733,7 +733,7 @@ public class GameController : MonoBehaviour {
                     "The fact's don't quite line up, but everyone takes you on your word.")));
 
                 yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
-                    "The group turns turn on c:1", new List<Character> { CharacterLibrary.PLAYER, characterBlamed })));
+                    "The group turns on c:1", new List<Character> { CharacterLibrary.PLAYER, characterBlamed })));
             }
             else
             {
