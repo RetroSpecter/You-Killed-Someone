@@ -18,16 +18,15 @@ public class GenericTextView : MonoBehaviour
     public void AnimatePrompt(StoryText text, Action<int> callback, string characterIndex = "")
     {
         textMeshPro.gameObject.SetActive(true);
-        var sequence = text.settings.byWord ? AnimatePerWord(text) : AnimatePerCharacter(text, characterIndex);
 
-        ActivateButton(text.settings, callback);
+        if(button != null)
+            button.gameObject.SetActive(false);
+
+        var sequence = text.settings.byWord ? AnimatePerWord(text, callback) : AnimatePerCharacter(text, callback, characterIndex);
     }
 
-    private Sequence AnimatePerWord(StoryText text) {
+    private Sequence AnimatePerWord(StoryText text, Action<int> callback) {
         textMeshPro.text = text.ProcessText();
-
-
-
         List<Color> ColorMapping = text.MapColor(attributesLookup);
         CharTweener _tweener = textMeshPro.GetCharTweener();
 
@@ -53,10 +52,13 @@ public class GenericTextView : MonoBehaviour
             i = j;
             i++;
         }
+        sequence.AppendCallback(() => {
+            ActivateButton(text.settings, callback);
+        });
         return sequence;
     }
 
-    private Sequence AnimatePerCharacter(StoryText text,  string characterIndex = "") {
+    private Sequence AnimatePerCharacter(StoryText text, Action<int> callback,  string characterIndex = "") {
         textMeshPro.color = Color.clear;
         textMeshPro.text = text.ProcessText();
 
@@ -84,10 +86,16 @@ public class GenericTextView : MonoBehaviour
 
             charSequence.Join(_tweener.DOColor(i, ColorMapping[i], 0.01f))
                 .Join(_tweener.DOScale(i, 0, 0.01f).From());
+
+            if (i == textMeshPro.text.Length - 1) {
+                charSequence.AppendCallback(() => {
+                    ActivateButton(text.settings, callback);
+                });
+            }
+
             sequence.Insert(timeOffset * text.settings.speed, charSequence);
         }
-        
-        
+              
         return sequence;
     }
 
@@ -144,6 +152,7 @@ public class GenericTextView : MonoBehaviour
                 callback?.Invoke(0);
                 buttonSFX?.Play();
                 button.onClick = new Button.ButtonClickedEvent();
+
             });
 
             button.interactable = !settings.strikethrough;
