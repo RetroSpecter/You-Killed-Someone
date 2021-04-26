@@ -123,11 +123,9 @@ public class GameController : MonoBehaviour {
         //    mp.bodyDiscovererID = CharacterLibrary.PLAYER.characterID;
         //} else {
 
-        // No choice to select who finds the body
-        {
-            var aliveCharacters = GameState.Instance.GetAliveCharacters();
-            mp.bodyDiscovererID = aliveCharacters[Random.Range(0, aliveCharacters.Count)].characterID;
-        }
+    // No choice to select who finds the body
+        var aliveCharacters = GameState.Instance.GetAliveCharacters();
+        var bodyDiscoverer = aliveCharacters[Random.Range(0, aliveCharacters.Count)];
 
         // Update game state
         GameState.Instance.RegisterMurderProfile(mp);
@@ -137,6 +135,37 @@ public class GameController : MonoBehaviour {
     public IEnumerator Investigation() {
         var mp = GameState.Instance.GetMostRecentMurderProfile();
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_FINDS_THE_BODY, new List<Character>() { mp.GetBodyDiscoverer() }, null, null, new TextSettings(0, false, 10, true))));
+
+        // If the body discoverer can pair anything with you, they will get more sus
+        // If weapons match
+        if (mp.GetBodyDiscoverer().believedPlayerToolID == mp.weaponProfileID) {
+            mp.GetBodyDiscoverer().AdjustSusModerately(true);
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is more suspicious of c:1 because they know c:1 like w:0",
+                new List<Character>() { mp.GetBodyDiscoverer(), CharacterLibrary.PLAYER },
+                null, new List<string> { ProfileLibrary.GetWeapon(mp.weaponProfileID) })));
+        }
+        // If Location matches
+        if (mp.GetBodyDiscoverer().believedPlayerLocationID == mp.locationProfileID) {
+            mp.GetBodyDiscoverer().AdjustSusModerately(true);
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is more suspicious of c:1 because they know c:1 like hanging out s:0",
+                new List<Character>() { mp.GetBodyDiscoverer(), CharacterLibrary.PLAYER },
+                new List<string> { ProfileLibrary.GetLocation(mp.locationProfileID) })));
+        }
+        // If occupation matches either the location or the weapon
+        if (mp.GetBodyDiscoverer().believedPlayerOccupationID == mp.murderedCharacterID
+            || mp.GetBodyDiscoverer().believedPlayerOccupationID == mp.locationProfileID) {
+
+            if (mp.GetBodyDiscoverer().believedPlayerOccupationID == mp.murderedCharacterID)
+                mp.GetBodyDiscoverer().AdjustSusSlightly(true);
+
+            if (mp.GetBodyDiscoverer().believedPlayerOccupationID == mp.locationProfileID)
+                mp.GetBodyDiscoverer().AdjustSusSlightly(true);
+
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is more suspicious of c:1 because they know c:1 you are a s:0",
+                new List<Character>() { mp.GetBodyDiscoverer(), CharacterLibrary.PLAYER },
+                new List<string> { ProfileLibrary.GetOpccupation(mp.GetBodyDiscoverer().believedPlayerOccupationID) })));
+        }
+
 
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone gathers s:0", null, new List<string> { mp.GetMurderLocation() })));
         //yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "tension fills the atmopshere")));
