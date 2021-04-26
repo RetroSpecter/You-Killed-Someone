@@ -159,7 +159,7 @@ public class GameController : MonoBehaviour {
             // What will you do?
             DialogueChoice askOrTell = DialogueChoice.CreateAskOrTellChoice(investigatee);
             yield return StartCoroutine(vc.DisplayPrompt(askOrTell, SelectOption));
-            bool asking = recentlySelectedOption == 0;
+            bool asking = recentlySelectedOption == 0 && !investigatee.profileKnown;
 
 
             if (asking) {             
@@ -234,7 +234,7 @@ public class GameController : MonoBehaviour {
                 else {
                     investigatee.AdjustSusModerately(true);
                     yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 raises an eyebrow", new List<Character> { investigatee })));
-                    yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 doesn't seem like the person who'd like that", new List<Character> { selectedCharacter })));
+                    yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 isn't the type of person to like that", new List<Character> { selectedCharacter })));
                     yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is more suspicious of you", new List<Character> { investigatee })));
                 }
             }
@@ -320,8 +320,7 @@ public class GameController : MonoBehaviour {
 
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 squints their eyes suspciously.", new List<Character> { investigatee })));
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They glance at the w:0 sticking out of c:0 's back", new List<Character> { mp.GetMurderedCharacter() }, null, new List<string> { mp.GetMurderWeapon() })));
-                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0", new List<Character> { mp.GetMurderedCharacter() }, null, new List<string> { mp.GetMurderWeapon() })));
-
+                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 suspcion of you has risen.", new List<Character> { investigatee })));
                     }
 
                     // if selected weapon contradicts what they know, increase sus greatly
@@ -331,6 +330,7 @@ public class GameController : MonoBehaviour {
 
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 raises an eyebrow", new List<Character> { investigatee })));
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 thought they heard something different before", new List<Character> { investigatee })));
+                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 suspcion of you has risen.", new List<Character> { investigatee })));
                     }
 
 
@@ -394,7 +394,7 @@ public class GameController : MonoBehaviour {
 
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 squints their eyes.", new List<Character> { investigatee })));
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They look around s:0 , and glance at the body right behind you", null, new List<string> { mp.GetMurderLocation() })));
-                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 suspicon of you has risen.", new List<Character> { investigatee })));
+                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 suspcion of you has risen.", new List<Character> { investigatee })));
                     }
 
                     // if selected location contradicts what they know, increase sus greatly
@@ -404,7 +404,7 @@ public class GameController : MonoBehaviour {
 
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 raises an eyebrow", new List<Character> { investigatee })));
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 thought they heard something different before", new List<Character> { investigatee })));
-                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 suspicon of you has risen.", new List<Character> { investigatee })));
+                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 suspcion of you has risen.", new List<Character> { investigatee })));
                     }
 
                     // Assign the the location
@@ -452,7 +452,7 @@ public class GameController : MonoBehaviour {
 
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 stares you down", new List<Character> { investigatee })));
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 thought they heard something different before", new List<Character> { investigatee })));
-                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 suspicon of you has risen slightly.", new List<Character> { investigatee })));
+                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 suspcion of you has risen slightly.", new List<Character> { investigatee })));
                     }
 
 
@@ -478,7 +478,7 @@ public class GameController : MonoBehaviour {
                         }
                     }
 
-                    
+
 
                     // If the investigatee's suspiciion rose
                     if (slightly1 ^ slightly2 && !greatly) {
@@ -491,14 +491,13 @@ public class GameController : MonoBehaviour {
                         if (slightly1 ^ slightly2) {
                             investigatee.AdjustSusSlightly(true);
                             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is slightly more suspicious.", new List<Character> { investigatee })));
-                        }
-                        
-                        else if (slightly1 && slightly2) {
+                        } else if (slightly1 && slightly2) {
                             investigatee.AdjustSusModerately(true);
-                            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is slightly suspicious.", new List<Character> { investigatee })));
+                            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is uber sus of you now.", new List<Character> { investigatee })));
+                        } else {
+                            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is uber sus of you now.", new List<Character> { investigatee })));
                         }
                         investigatee.AdjustSusGreatly( true);
-                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is uber sus of you now.", new List<Character> { investigatee })));
                     }
 
                     // Assign the the occupation
@@ -568,18 +567,25 @@ public class GameController : MonoBehaviour {
                     if (!c.MatchesBelievedPlayerTool(playerAnswer))
                         yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerToolID = playerAnswer;
+
+                    yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks c:0 like this w:0", new List<Character>() { CharacterLibrary.PLAYER }, null, new List<string>() { ProfileLibrary.GetWeapon(playerAnswer) })));
                 }
                 else if (questionType == 1)
                 {
                     if (!c.MatchesBelievedPlayerLocation(playerAnswer))
                         yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerLocationID = playerAnswer;
+
+                    yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks c:0 like this s:0", new List<Character>() { CharacterLibrary.PLAYER }, new List<string>() { ProfileLibrary.GetLocation(playerAnswer) })));
+
                 }
                 else if (questionType == 2)
                 {
                     if (!c.MatchesBelievedPlayerOccupation(playerAnswer))
                         yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerOccupationID = playerAnswer;
+
+                    yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks c:0 are a  s:0", new List<Character>() { CharacterLibrary.PLAYER }, new List<string>() { ProfileLibrary.GetOpccupation(playerAnswer) })));
                 }
                 else {
                     Debug.LogError("oops");
@@ -590,19 +596,18 @@ public class GameController : MonoBehaviour {
             foreach(var c in GameState.Instance.GetAliveCharacters()) {
                 if (questionType == 0 && c.believedPlayerToolID == playerAnswer) {
                     yield return StartCoroutine(AdjustSusGreatly(c, true));
-                    c.believedPlayerToolID = playerAnswer;
+                    c.believedPlayerToolID = "";
                 } else if (questionType == 1 && c.believedPlayerLocationID == playerAnswer) {
                     yield return StartCoroutine(AdjustSusGreatly(c, true));
-                    c.believedPlayerLocationID = playerAnswer;
+                    c.believedPlayerLocationID = "";
                 } else if (questionType == 2 && c.believedPlayerOccupationID == playerAnswer) {
                     yield return StartCoroutine(AdjustSusGreatly(c, true));
-                    c.believedPlayerOccupationID = playerAnswer;
+                    c.believedPlayerOccupationID = "";
                 } else {
                     Debug.LogError("oops");
                 }
             }
         }
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks this.")));
 
         yield return new WaitForSeconds(0.5f);
 

@@ -43,6 +43,15 @@ public class DialogueChoice {
         this.options = new List<DialogueChoiceOption> { firstOption, secondOption };
     }
 
+    // Two Square constructor but only one options
+    public DialogueChoice(StoryText prompt, DialogueChoiceOption firstOption)
+    {
+        this.type = DialogueChoiceType.twoSquare;
+        this.prompt = prompt;
+        this.choiceid = prompt.textID;
+        this.options = new List<DialogueChoiceOption> { firstOption };
+    }
+
     // Four Square constructor
     public DialogueChoice(StoryText prompt, List<DialogueChoiceOption> textOptions) {
         this.type = DialogueChoiceType.fourSquare;
@@ -71,7 +80,14 @@ public class DialogueChoice {
 
     public static DialogueChoice CreateAskOrTellChoice(Character beingTalkedto) {
         StoryText talkOrTell = new StoryText("AskOrTell", "What do c:0 talk about with c:1 ?", new List<Character> { CharacterLibrary.PLAYER , beingTalkedto });
-        return new DialogueChoice(talkOrTell, DialogueChoiceOption.ASK, DialogueChoiceOption.TELL);
+        if (beingTalkedto.profileKnown)
+        {
+
+            return new DialogueChoice(talkOrTell, DialogueChoiceOption.TELL);
+        } else {
+            return new DialogueChoice(talkOrTell, DialogueChoiceOption.ASK, DialogueChoiceOption.TELL);
+
+        }
     }
 
     public static DialogueChoice CreateYouTellChoice(Character beingTalkedTo, string weaponText = "", string locationText = "", Character affinity = null) {
