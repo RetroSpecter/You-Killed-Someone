@@ -22,11 +22,11 @@ public class GameController : MonoBehaviour {
 
         // ROUND 1
         yield return StartCoroutine(Murder());
-        yield return StartCoroutine(Investigation());
+        yield return StartCoroutine(Investigation(3));
         yield return StartCoroutine(Trial());
         // Round 1 Over
-        yield return new WaitForSeconds(0.5f);
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the first murder", new List<Character> { CharacterLibrary.PLAYER })));
+        yield return new WaitForSeconds(1f);
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the murder most fowl", new List<Character> { CharacterLibrary.PLAYER })));
         GameState.Instance.currentRound++;
 
         // Preface Round 2
@@ -38,30 +38,29 @@ public class GameController : MonoBehaviour {
 
         // ROUND 2
         yield return StartCoroutine(Murder());
-        yield return StartCoroutine(Investigation());
+        yield return StartCoroutine(Investigation(2));
         yield return StartCoroutine(Trial());
         // Round 2 over
-        yield return new WaitForSeconds(0.5f);
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the second murder", new List<Character> { CharacterLibrary.PLAYER })));
+        yield return new WaitForSeconds(1f);
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 have done it again. Off scott free", new List<Character> { CharacterLibrary.PLAYER })));
         GameState.Instance.currentRound++;
 
         // Preface round 3
         yield return new WaitForSeconds(0.5f);
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "As much as you resist, your bloodlust gets the best of you again.")));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "However, soon you are again filled with a violent fury")));
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(0.5f, false, 0, true))));
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "However, everyone still remembers what c:0 told them before.", new List<Character> { CharacterLibrary.PLAYER })));
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Don't dig yourself too deep")));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Mind the lies you've told.")));
 
         // ROUND 3
         yield return StartCoroutine(Murder());
-        yield return StartCoroutine(Investigation());
+        yield return StartCoroutine(Investigation(1));
         yield return StartCoroutine(Trial());
 
         // Round 3 over
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 got away with the third murder", new List<Character> { CharacterLibrary.PLAYER })));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("victory", "c:0 gotten away with massacre most fowl.", new List<Character> { CharacterLibrary.PLAYER })));
 
 
-        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "As much as you resist, your bloodlust gets the best of you again.")));
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "However, You still have to finish the job.")));
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.YOU_KILLED_SOMEONE, new List<Character> { CharacterLibrary.PLAYER }, null, null, new TextSettings(0.5f, false, 0, true))));
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 didn't see it coming", new List<Character> { GameState.Instance.GetAliveCharacters()[0] })));
 
@@ -136,7 +135,7 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds(1);
     }
 
-    public IEnumerator Investigation() {
+    public IEnumerator Investigation(int totalInvestigations) {
         var mp = GameState.Instance.GetMostRecentMurderProfile();
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText(StoryText.X_FINDS_THE_BODY, new List<Character>() { mp.GetBodyDiscoverer() }, null, null, new TextSettings(0, false, 10, true))));
 
@@ -146,11 +145,10 @@ public class GameController : MonoBehaviour {
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "NO ONE MUST KNOW", null, null, null, new TextSettings(0, false, 5, true))));
 
         yield return new WaitForSeconds(1f);
-        int totalInvestigations = 3;
         for (int i = 0; i < totalInvestigations - GameState.Instance.currentRound; i++) {
             // Everyone is muttering among themselves
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is cautiously eyeing each other")));
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 can take s:0 actions", new List<Character> { CharacterLibrary.PLAYER }, new List<string> { (3 - i) + "" })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 can take s:0 actions", new List<Character> { CharacterLibrary.PLAYER }, new List<string> { (totalInvestigations - i) + "" })));
 
 
             // Who will you talk to?
@@ -251,6 +249,7 @@ public class GameController : MonoBehaviour {
             // QUESTION
             // QUESTION
 
+            yield return new WaitForSeconds(1);
 
 
             // Investigatee wants to ask you a question
@@ -520,6 +519,8 @@ public class GameController : MonoBehaviour {
     }
 
     public IEnumerator Trial() {
+        yield return new WaitForSeconds(1);
+
         var mp = GameState.Instance.GetMostRecentMurderProfile();
 
         // get x character who is sus of the character
@@ -562,18 +563,26 @@ public class GameController : MonoBehaviour {
             foreach (var c in GameState.Instance.GetAliveCharacters()) {
                 // Check for a contradiction between player's answer and their answer just now
                 // regardless of contradiction, change the chracter's belief
-                if (questionType == 0) {
+                if (questionType == 0)
+                {
                     if (!c.MatchesBelievedPlayerTool(playerAnswer))
                         yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerToolID = playerAnswer;
-                } else if (questionType == 1) {
+                }
+                else if (questionType == 1)
+                {
                     if (!c.MatchesBelievedPlayerLocation(playerAnswer))
                         yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerLocationID = playerAnswer;
-                } else if (questionType == 2) {
+                }
+                else if (questionType == 2)
+                {
                     if (!c.MatchesBelievedPlayerOccupation(playerAnswer))
                         yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerOccupationID = playerAnswer;
+                }
+                else {
+                    Debug.LogError("oops");
                 }
             }
         } else {
@@ -581,13 +590,15 @@ public class GameController : MonoBehaviour {
             foreach(var c in GameState.Instance.GetAliveCharacters()) {
                 if (questionType == 0 && c.believedPlayerToolID == playerAnswer) {
                     yield return StartCoroutine(AdjustSusGreatly(c, true));
-                    c.believedPlayerToolID = "";
+                    c.believedPlayerToolID = playerAnswer;
                 } else if (questionType == 1 && c.believedPlayerLocationID == playerAnswer) {
                     yield return StartCoroutine(AdjustSusGreatly(c, true));
-                    c.believedPlayerLocationID = "";
+                    c.believedPlayerLocationID = playerAnswer;
                 } else if (questionType == 2 && c.believedPlayerOccupationID == playerAnswer) {
                     yield return StartCoroutine(AdjustSusGreatly(c, true));
-                    c.believedPlayerOccupationID = "";
+                    c.believedPlayerOccupationID = playerAnswer;
+                } else {
+                    Debug.LogError("oops");
                 }
             }
         }
@@ -751,7 +762,9 @@ public class GameController : MonoBehaviour {
     {
         c.AdjustSusGreatly(increase);
         if (increase)
+        {
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 doesn't believe a single word you said.", new List<Character> { c })));
+        }
         else
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you completely", new List<Character> { c })));
     }

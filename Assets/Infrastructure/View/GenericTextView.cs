@@ -52,7 +52,8 @@ public class GenericTextView : MonoBehaviour
             i = j;
             i++;
         }
-        sequence.AppendCallback(() => {
+        sequence.AppendInterval(0.1f)
+            .AppendCallback(() => {
             ActivateButton(text.settings, callback);
         });
         return sequence;
@@ -88,7 +89,8 @@ public class GenericTextView : MonoBehaviour
                 .Join(_tweener.DOScale(i, 0, 0.01f).From());
 
             if (i == textMeshPro.text.Length - 1) {
-                charSequence.AppendCallback(() => {
+                charSequence.AppendInterval(0.1f)
+                    .AppendCallback(() => {
                     ActivateButton(text.settings, callback);
                 });
             }
