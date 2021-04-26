@@ -647,13 +647,23 @@ public class GameController : MonoBehaviour {
         // Calculation
 
         int failureSusLevel = 100;
-        int numCharsTooSus = 0;
+        int totalSus = 0;
+        Character mostSus = GameState.Instance.GetAliveCharacters()[0];
         foreach (var c in GameState.Instance.GetAliveCharacters()) {
-            if (c.sus >= failureSusLevel)
-                numCharsTooSus++;
+            totalSus += c.sus;
+            if (c.sus > mostSus.sus) {
+                mostSus = c;
+            }
         }
 
-        bool failure = numCharsTooSus >= GameState.Instance.GetAliveCharacters().Count / 2;
+        // Penalty for killing the most sus player
+        //if (mostSus.characterID == characterBlamed.characterID) {
+        //    yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+        //        "Everyone finds it suspicious that c:0 accuse ", new List<Character> { CharacterLibrary.PLAYER, characterBlamed, GameState.Instance.GetMostRecentlyKilled() })));
+        //}
+
+
+        bool failure = totalSus / GameState.Instance.GetAliveCharacters().Count >= failureSusLevel;
 
         if (failure) {
             // The group does not believe you. They think you did it.
