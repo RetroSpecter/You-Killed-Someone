@@ -596,17 +596,12 @@ public class GameController : MonoBehaviour {
                     if (!c.MatchesBelievedPlayerTool(playerAnswer))
                         yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerToolID = playerAnswer;
-
-                    yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks c:0 like this w:0", new List<Character>() { CharacterLibrary.PLAYER }, null, new List<string>() { ProfileLibrary.GetWeapon(playerAnswer) })));
                 }
                 else if (questionType == 1)
                 {
                     if (!c.MatchesBelievedPlayerLocation(playerAnswer))
                         yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerLocationID = playerAnswer;
-
-                    yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks c:0 like this s:0", new List<Character>() { CharacterLibrary.PLAYER }, new List<string>() { ProfileLibrary.GetLocation(playerAnswer) })));
-
                 }
                 else if (questionType == 2)
                 {
@@ -614,11 +609,9 @@ public class GameController : MonoBehaviour {
                         yield return StartCoroutine(AdjustSusGreatly(c, true));
                     c.believedPlayerOccupationID = playerAnswer;
 
-                    yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks c:0 are a  s:0", new List<Character>() { CharacterLibrary.PLAYER }, new List<string>() { ProfileLibrary.GetOpccupation(playerAnswer) })));
                 }
-                else {
-                    Debug.LogError("oops");
-                }
+
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks c:0 are a  s:0", new List<Character>() { CharacterLibrary.PLAYER }, new List<string>() { ProfileLibrary.GetOpccupation(playerAnswer) })));
             }
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks this.")));
         } else {
