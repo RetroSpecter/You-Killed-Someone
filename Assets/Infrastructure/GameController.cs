@@ -659,7 +659,7 @@ public class GameController : MonoBehaviour {
             // The group believes you.
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
                 "The group believes what c:0 say and turn on c:1", new List<Character> { CharacterLibrary.PLAYER, characterBlamed })));
-
+            GameState.Instance.KillCharacter(characterBlamed.characterID);
 
             // <blank> goodbye
             yield return StartCoroutine(vc.DisplayStoryText(GetRandomExecutionText(characterBlamed)));
