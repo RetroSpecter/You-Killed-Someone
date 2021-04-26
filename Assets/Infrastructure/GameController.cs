@@ -125,7 +125,7 @@ public class GameController : MonoBehaviour {
 
     // No choice to select who finds the body
         var aliveCharacters = GameState.Instance.GetAliveCharacters();
-        var bodyDiscoverer = aliveCharacters[Random.Range(0, aliveCharacters.Count)];
+        mp.bodyDiscovererID = aliveCharacters[Random.Range(0, aliveCharacters.Count)].characterID;
 
         // Update game state
         GameState.Instance.RegisterMurderProfile(mp);
