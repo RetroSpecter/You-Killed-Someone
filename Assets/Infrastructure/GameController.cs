@@ -145,7 +145,7 @@ public class GameController : MonoBehaviour {
 
         yield return new WaitForSeconds(1f);
         int totalInvestigations = 3;
-        for (int i = 0; i < totalInvestigations; i++) {
+        for (int i = 0; i < totalInvestigations - GameState.Instance.currentRound; i++) {
             // Everyone is muttering among themselves
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is cautiously eyeing each other")));
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 can take s:0 actions", new List<Character> { CharacterLibrary.PLAYER }, new List<string> { (3 - i) + "" })));
