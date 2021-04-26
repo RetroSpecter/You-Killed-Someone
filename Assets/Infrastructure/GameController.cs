@@ -68,7 +68,7 @@ public class GameController : MonoBehaviour {
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "There is no one left")));
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is dead")));
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Do it again?")));
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Restarting the game...")));
 
@@ -140,7 +140,7 @@ public class GameController : MonoBehaviour {
 
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone gathers s:0", null, new List<string> { mp.GetMurderLocation() })));
         //yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "tension fills the atmopshere")));
-
+        yield return new WaitForSeconds(1.5f);
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "NO ONE MUST KNOW", null, null, null, new TextSettings(0, false, 5, true))));
 
         yield return new WaitForSeconds(1f);
@@ -586,7 +586,9 @@ public class GameController : MonoBehaviour {
                 }
             }
         }
+        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone now thinks this.")));
 
+        yield return new WaitForSeconds(0.5f);
 
         // Tensions rise even higher as you fall deeper and deeper into your lies
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
@@ -603,31 +605,42 @@ public class GameController : MonoBehaviour {
         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
             "c:0 tell everyone that c:1 killed c:2", new List<Character> { CharacterLibrary.PLAYER, characterBlamed, GameState.Instance.GetMostRecentlyKilled() })));
 
-
+        bool incorrect = false;
         // People's reactions
         // If selected character is associated with weapon or place, you lose sus
-        if (characterBlamed.profile.profileID == mp.weaponProfileID) {
-            foreach(var c in GameState.Instance.GetAliveCharacters()) {
+        if (characterBlamed.profile.profileID == mp.weaponProfileID)
+        {
+            foreach (var c in GameState.Instance.GetAliveCharacters())
+            {
                 c.AdjustSusSlightly(false);
             }
 
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone thinks that makes sense, given c:0 likes w:0",
                 new List<Character> { characterBlamed }, null, new List<string> { ProfileLibrary.GetWeapon(mp.weaponProfileID) })));
-        } else if (characterBlamed.profile.profileID == mp.locationProfileID) {
-            foreach (var c in GameState.Instance.GetAliveCharacters()) {
+        }
+        else if (characterBlamed.profile.profileID == mp.locationProfileID)
+        {
+            foreach (var c in GameState.Instance.GetAliveCharacters())
+            {
                 c.AdjustSusSlightly(false);
             }
 
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone thinks that makes sense, given c:0 likes hanging out s:0",
                 new List<Character> { characterBlamed }, new List<string> { ProfileLibrary.GetWeapon(mp.locationProfileID) })));
-        } else if (characterBlamed.profile.profileID == mp.weaponProfileID && characterBlamed.profile.profileID == mp.locationProfileID) {
-            foreach (var c in GameState.Instance.GetAliveCharacters()) {
+        }
+        else if (characterBlamed.profile.profileID == mp.weaponProfileID && characterBlamed.profile.profileID == mp.locationProfileID)
+        {
+            foreach (var c in GameState.Instance.GetAliveCharacters())
+            {
                 c.AdjustSusModerately(false);
             }
 
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone thinks that makes sense, given c:0 works s:0 and uses w:0",
                 new List<Character> { characterBlamed }, new List<string> { ProfileLibrary.GetWeapon(mp.locationProfileID) },
                 new List<string> { ProfileLibrary.GetWeapon(mp.weaponProfileID) })));
+        }
+        else {
+            incorrect = true;
         }
 
 
@@ -656,9 +669,21 @@ public class GameController : MonoBehaviour {
             SceneManager.LoadScene(0);
 
         } else {
-            // The group believes you.
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
-                "The group believes what c:0 say and turn on c:1", new List<Character> { CharacterLibrary.PLAYER, characterBlamed })));
+            if (incorrect) {
+                // The group believes you.
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+                    "The fact's don't quite line up, but everyone takes you on your word.")));
+
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+                    "The group turns turn on c:1", new List<Character> { CharacterLibrary.PLAYER, characterBlamed })));
+            }
+            else
+            {
+                // The group believes you.
+                yield return StartCoroutine(vc.DisplayStoryText(new StoryText("",
+                    "The group believes what c:0 say and turn on c:1", new List<Character> { CharacterLibrary.PLAYER, characterBlamed })));
+            }
+
             GameState.Instance.KillCharacter(characterBlamed.characterID);
 
             // <blank> goodbye
