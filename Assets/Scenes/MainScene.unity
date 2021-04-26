@@ -611,7 +611,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -113.44354, y: 0, z: -335.46884, w: 0}
+  m_margin: {x: -179.72214, y: 0, z: -434.12085, w: 0}
   m_textInfo:
     textComponent: {fileID: 253811864}
     characterCount: 34
@@ -2215,7 +2215,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &824750882
 MonoBehaviour:
   m_ObjectHideFlags: 0
