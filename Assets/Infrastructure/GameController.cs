@@ -266,14 +266,22 @@ public class GameController : MonoBehaviour {
                 // Asking about preferred tools
                 case 0:
                     Profile murderWeaponProfile = ProfileLibrary.GetProfile(mp.weaponProfileID);
+
+                    // Search through the list of profiles for the murder weapon and the believed weapon
+                    bool containsMurderWeapon = false, containsBelievedTool = false;
+                    foreach (var p in profiles) {
+                        containsMurderWeapon |= p.profileID == murderWeaponProfile.profileID;
+                        containsBelievedTool |= p.profileID == investigatee.believedPlayerToolID;
+                    }
+
                     // Ensure the murder weapon is in this list
-                    if (!profiles.Contains(murderWeaponProfile)) {
+                    if (!containsMurderWeapon) {
                         profiles[0] = murderWeaponProfile;
                     }
                     // If investigatee already has a field filled for this, ensure it is in there too
                     if (investigatee.believedPlayerToolID != "") {
                         Profile believedPlayerToolProfile = ProfileLibrary.GetProfile(investigatee.believedPlayerToolID);
-                        if (!profiles.Contains(believedPlayerToolProfile)) {
+                        if (!containsBelievedTool) {
                             profiles[3] = believedPlayerToolProfile;
                         }
                     }
@@ -328,14 +336,22 @@ public class GameController : MonoBehaviour {
                 // Asking about favorite place
                 case 1:
                     Profile murderLocationProfile = ProfileLibrary.GetProfile(mp.locationProfileID);
+
+                    // Search through the list of profiles for the murder place and the believed place
+                    bool containsMurderPlace = false, containsBelievedPlace = false;
+                    foreach (var p in profiles) {
+                        containsMurderPlace |= p.profileID == murderLocationProfile.profileID;
+                        containsBelievedPlace |= p.profileID == investigatee.believedPlayerLocationID;
+                    }
+
                     // Ensure the murder location is in this list
-                    if (!profiles.Contains(murderLocationProfile)) {
+                    if (!containsMurderPlace) {
                         profiles[0] = murderLocationProfile;
                     }
                     // If investigatee already has a field filled for this, ensure it is in there too
                     if (investigatee.believedPlayerLocationID != "") {
                         Profile believedPlayerLocationProfile = ProfileLibrary.GetProfile(investigatee.believedPlayerLocationID);
-                        if (!profiles.Contains(believedPlayerLocationProfile)) {
+                        if (!containsBelievedPlace) {
                             profiles[3] = believedPlayerLocationProfile;
                         }
                     }
@@ -395,8 +411,16 @@ public class GameController : MonoBehaviour {
                     // No need to ensure any occupation is in the list. We only care if the 
                     //  investigatee already has their occupation field filled out
                     if (investigatee.believedPlayerOccupationID != "") {
+
+                        // Search through the list of profiles for the the believed weapon
+                        bool containsBelievedOccupation = false;
+                        foreach (var p in profiles) {
+                            containsBelievedOccupation |= p.profileID == investigatee.believedPlayerOccupationID;
+                        }
+
+
                         Profile believedPlayerOccupationProfile = ProfileLibrary.GetProfile(investigatee.believedPlayerOccupationID);
-                        if (!profiles.Contains(believedPlayerOccupationProfile)) {
+                        if (!containsBelievedOccupation) {
                             profiles[Random.Range(0,3)] = believedPlayerOccupationProfile;
                         }
                     }
