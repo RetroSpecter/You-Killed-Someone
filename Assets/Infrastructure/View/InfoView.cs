@@ -6,16 +6,16 @@ public class InfoView : MonoBehaviour
     public TextMeshProUGUI infoText;
     public CanvasGroup group;
 
-    public const string infoFormat = "      job: {0} \n"
-                                    + "     tool: {1} \n"
-                                    + "    place: {2} \n"
+    public const string infoFormat =  "job: {0} \n"
+                                    + "tool: {1} \n"
+                                    + "place: {2} \n"
                                     + "suspicion: {3} \n";
 
     public void SetInfo(Character character) {
 
         string suspcionLevel = "ERROR";
 
-        if (character.sus >= 100)
+        if (character.sus >= 150)
         {
             suspcionLevel = "pretty sus";
         } else if (character.sus >= 100) {

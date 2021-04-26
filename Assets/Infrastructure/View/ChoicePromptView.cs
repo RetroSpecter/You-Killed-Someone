@@ -66,7 +66,7 @@ public class ChoicePromptView : MonoBehaviour
 
         DOTween.Sequence()
             .Append(buttons[index].transform.DOMove(Vector2.zero, t).SetEase(Ease.OutCubic, 10))
-            .Join(buttons[index].transform.DOScale(buttonInitScale[index].x * 2f, t).SetEase(Ease.OutCubic, 10))
+            .Join(buttons[index].transform.DOScale(buttonInitScale[index].x * 2.5f, t + t * 0.5f).SetEase(Ease.OutCubic, 10))
             .AppendInterval(0.5f)
             .AppendCallback(() => { 
                 callback(index);

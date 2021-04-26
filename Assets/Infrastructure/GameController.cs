@@ -105,7 +105,7 @@ public class GameController : MonoBehaviour {
         for (int i = 0; i < totalInvestigations; i++) {
             // Everyone is muttering among themselves
             yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "Everyone is cautiously eyeing each other")));
-            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 can talk to s:0 more people", new List<Character> { CharacterLibrary.PLAYER }, new List<string> { (3 - i) + "" })));
+            yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 can take s:0 actions", new List<Character> { CharacterLibrary.PLAYER }, new List<string> { (3 - i) + "" })));
 
 
             // Who will you talk to?
@@ -266,7 +266,7 @@ public class GameController : MonoBehaviour {
                         investigatee.AdjustSusModerately(true);
                         Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
 
-                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 squints his eyes suspciously.", new List<Character> { investigatee })));
+                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 squints their eyes suspciously.", new List<Character> { investigatee })));
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They glance at the w:0 sticking out of c:0 's back", new List<Character> { mp.GetMurderedCharacter() }, null, new List<string> { mp.GetMurderWeapon() })));
                     }
 
@@ -330,7 +330,7 @@ public class GameController : MonoBehaviour {
                         investigatee.AdjustSusModerately(true);
                         Debug.Log(investigatee.nickName + "'s sus of the player has moderately raised to " + investigatee.sus);
 
-                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 squints his eyes.", new List<Character> { investigatee })));
+                        yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 squints their eyes.", new List<Character> { investigatee })));
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "They look around s:0 , and glance at the body right behind you", null, new List<string> { mp.GetMurderLocation() })));
                         yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 suspicon of you has risen.", new List<Character> { investigatee })));
                     }
@@ -611,7 +611,12 @@ public class GameController : MonoBehaviour {
 
     public StoryText GetRandomExecutionText(Character dead) {
         List<StoryText> executionTexts = new List<StoryText> {
-            new StoryText("", "c:0 will be sleeping with the fishes tonight", new List<Character> { dead })
+            new StoryText("", "c:0 will be sleeping with the fishes tonight", new List<Character> { dead }),
+            new StoryText("", "c:0 was kicked out to fend for themselves", new List<Character> { dead }),
+            new StoryText("", "c:0 won't be bothering anyone anytime soon", new List<Character> { dead }),
+            new StoryText("", "And that was the last anyone saw of c:0", new List<Character> { dead }),
+            new StoryText("", "c:0 was ejected", new List<Character> { dead }),
+            new StoryText("", "c:0 was voted off the island", new List<Character> { dead }),
         };
 
         return executionTexts[Random.Range(0, executionTexts.Count)];
