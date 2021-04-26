@@ -226,13 +226,13 @@ public class GameController : MonoBehaviour {
                 // If incorrect, sus of you goes up
                 Debug.Log("What you told " + investigatee.nickName + " is " + correct);
                 if (correct) {
-                    investigatee.AdjustSusSlightly(correct);
+                    investigatee.AdjustSusSlightly(false);
                     yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 nods", new List<Character> { investigatee })));
                     yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is definetly a fan of that", new List<Character> { selectedCharacter })));
                     yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 trusts you a bit more", new List<Character> { investigatee })));
                 }
                 else {
-                    investigatee.AdjustSusModerately(false);
+                    investigatee.AdjustSusModerately(true);
                     yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 raises an eyebrow", new List<Character> { investigatee })));
                     yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 doesn't seem like the person who'd like that", new List<Character> { selectedCharacter })));
                     yield return StartCoroutine(vc.DisplayStoryText(new StoryText("", "c:0 is more suspicious of you", new List<Character> { investigatee })));
@@ -432,7 +432,7 @@ public class GameController : MonoBehaviour {
 
 
                     // NPC Asks about if the player is any of the above occupations
-                    DialogueChoice occupationsQuestion = DialogueChoice.CreateAQuestion(investigatee, null, profiles);
+                    DialogueChoice occupationsQuestion = DialogueChoice.CreateAQuestion(investigatee, null, null, profiles);
                     yield return StartCoroutine(vc.DisplayPrompt(occupationsQuestion, SelectOption));
                     string selectedOccupationID = occupationsQuestion.GetOptionID(recentlySelectedOption);
 
@@ -684,6 +684,7 @@ public class GameController : MonoBehaviour {
                     "The group believes what c:0 say and turn on c:1", new List<Character> { CharacterLibrary.PLAYER, characterBlamed })));
             }
 
+            GameState.Instance.KillCharacter(characterBlamed.characterID);
 
             // <blank> goodbye
             yield return StartCoroutine(vc.DisplayStoryText(GetRandomExecutionText(characterBlamed)));
